@@ -82,7 +82,7 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"/>
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/topbar"
+        android:id="@+id/qtb_topbar"
         android:layout_marginTop="0dp"
         android:paddingTop="30dp"
         app:navigationIcon="@drawable/jpush_ic_richpush_actionbar_back"

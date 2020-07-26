@@ -271,4 +271,7 @@
 
     <string name="mobile_contacts">查看手机通讯录</string>
     <string name="change_mobile">更换手机号</string>
+    <string name="gnjs_text">功能介绍</string>
+    <string name="tsjy_text">投诉建议</string>
+    <string name="check_version">检查新版本</string>
 </resources>

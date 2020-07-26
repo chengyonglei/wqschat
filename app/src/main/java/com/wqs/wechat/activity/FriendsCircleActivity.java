@@ -67,7 +67,7 @@ public class FriendsCircleActivity extends AppCompatActivity {
     NestedScrollView scrollView;
     @BindView(R.id.rv_list)
     RecyclerView rvList;
-    @BindView(R.id.topbar)
+    @BindView(R.id.qtb_topbar)
     Toolbar topbar;
     @BindView(R.id.iv_camera)
     ImageView ivCamera;

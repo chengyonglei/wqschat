@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <com.qmuiteam.qmui.widget.QMUITopBar
-        android:id="@+id/topbar"
+        android:id="@+id/qtb_topbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingRight="10dp"

@@ -5,20 +5,20 @@
 5    android:versionName="4.0" >
 6
 7    <uses-sdk
-7-->D:\android\wechat-master\LibZxing\AndroidManifest.xml:7:5-47
+7-->D:\android\wechat-master\wqschat\LibZxing\AndroidManifest.xml:7:5-47
 8        android:minSdkVersion="26"
-8-->D:\android\wechat-master\LibZxing\AndroidManifest.xml:7:5-47
+8-->D:\android\wechat-master\wqschat\LibZxing\AndroidManifest.xml:7:5-47
 9        android:targetSdkVersion="30" />
-9-->D:\android\wechat-master\LibZxing\AndroidManifest.xml:7:15-44
+9-->D:\android\wechat-master\wqschat\LibZxing\AndroidManifest.xml:7:15-44
 10
 11    <application>
-11-->D:\android\wechat-master\LibZxing\AndroidManifest.xml:9:5-14:19
+11-->D:\android\wechat-master\wqschat\LibZxing\AndroidManifest.xml:9:5-14:19
 12        <activity
-12-->D:\android\wechat-master\LibZxing\AndroidManifest.xml:10:9-12:76
+12-->D:\android\wechat-master\wqschat\LibZxing\AndroidManifest.xml:10:9-12:76
 13            android:name="com.google.zxing.ISBNActivity"
-13-->D:\android\wechat-master\LibZxing\AndroidManifest.xml:11:13-57
+13-->D:\android\wechat-master\wqschat\LibZxing\AndroidManifest.xml:11:13-57
 14            android:windowSoftInputMode="adjustUnspecified|stateVisible" />
-14-->D:\android\wechat-master\LibZxing\AndroidManifest.xml:12:13-73
+14-->D:\android\wechat-master\wqschat\LibZxing\AndroidManifest.xml:12:13-73
 15    </application>
 16
 17</manifest>

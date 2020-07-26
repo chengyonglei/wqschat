@@ -1,7 +1,6 @@
 package com.wqs.wechat.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.lwkandroid.imagepicker.ImagePicker;
 import com.lwkandroid.imagepicker.data.ImageBean;
@@ -40,7 +37,7 @@ public class FriendsCircleSendActivity extends BaseActivity {
     EditText content;
     @BindView(R.id.ninegridview)
     NineGridView mNineGridView;
-    @BindView(R.id.topbar)
+    @BindView(R.id.qtb_topbar)
     QMUITopBar topbar;
     int num = 9;
 
