@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.AddFriendsByRadarActivity">
+
+    <com.wqs.wechat.widget.RadarView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></com.wqs.wechat.widget.RadarView>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_avatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@mipmap/default_user_avatar"
+        fresco:placeholderImageScaleType="centerCrop"
+        fresco:roundAsCircle="true" />
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:layout_gravity="top"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_radar_bg"
+        android:onClick="back"
+        android:text="退出"
+        android:textColor="#ffffff" />
+</FrameLayout>
+

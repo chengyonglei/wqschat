@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    android:scrollY="24dip">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-20dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/bg_friends_circle_cover" />
+        <ImageView
+            android:id="@+id/iv_friends_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingTop="60dp"
+            android:paddingLeft="10dp"
+            android:src="@drawable/ic_firendcircle_back" />
+
+        <ImageView
+            android:id="@+id/iv_add_friends_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingTop="60dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="14dp"
+            android:src="@mipmap/icon_camera" />
+        <ImageView
+            android:id="@+id/iv_friends_circle_progress"
+            android:layout_width="24dip"
+            android:layout_height="24dip"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="40dp"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/icon_friends_circle_progress"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iv_cover"
+            android:layout_marginRight="14dp"
+            android:layout_toLeftOf="@+id/sdv_avatar"
+            android:paddingTop="40dp"
+            android:paddingBottom="5dp"
+            android:text=""
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <com.qmuiteam.qmui.widget.QMUIRadiusImageView
+            android:id="@+id/sdv_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignTop="@+id/tv_nick_name"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:scaleType="fitXY"
+            fresco:qmui_corner_radius="5dp"
+            android:src="@mipmap/default_user_avatar"/>
+    </RelativeLayout>
+</LinearLayout>

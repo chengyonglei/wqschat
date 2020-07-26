@@ -1,0 +1,2 @@
+include ':ninegridview'
+include ':app', ':LibZxing'

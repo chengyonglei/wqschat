@@ -1,0 +1,274 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation,ExtraTranslation">
+    <string name="app_name">企云行知</string>
+
+    <string name="tab_chats">首页</string>
+    <string name="tab_contacts">通讯录</string>
+    <string name="tab_discover">发现</string>
+    <string name="tab_me">我</string>
+
+    <string name="enter_mobile_number">请填写手机号</string>
+    <string name="enter_wechat_password">请填写微信密码</string>
+    <string name="enter_verification_code">请填写验证码</string>
+    <string name="next">下一步</string>
+    <string name="verification_code">验证码</string>
+    <string name="get_verification_code">获取验证码</string>
+    <string name="country_and_area">国家和地区</string>
+    <string name="country_china">中国</string>
+    <string name="login_hint_phone">你的手机号码</string>
+    <string name="login_hint_password">填写密码</string>
+    <string name="login_meet_problem">登录遇到问题？</string>
+    <string name="account">账号</string>
+    <string name="login">登录</string>
+    <string name="qq_id">QQ号</string>
+    <string name="qq_password">QQ密码</string>
+    <string name="email">邮箱地址</string>
+    <string name="mobile_security">手机安全防护</string>
+    <string name="more_security_setting">更多安全设置</string>
+
+    <string name="login_via_mobile_number">手机号登录</string>
+    <string name="use_mobile_number_to_login">用手机号登录</string>
+    <string name="login_via_wechat_id_email_qq_id">微信号/QQ号/邮箱登录</string>
+    <string name="use_wechat_id_email_qq_id_to_login">用微信号/QQ号/邮箱登录</string>
+    <string name="login_via_password">用密码登录</string>
+    <string name="login_via_sms_verification_code">用短信验证码登录</string>
+    <string name="logging_in">正在登录...</string>
+    <string name="enter_your_password">密码不能为空，请输入密码</string>
+    <string name="enter_your_verification_code">验证码不能为空</string>
+    <string name="login_error">登录失败</string>
+    <string name="registering">正在注册...</string>
+    <string name="account_or_password_error">账号或密码错误，请重新填写</string>
+    <string name="verification_code_error">验证码不正确，请重新输入</string>
+    <string name="register">注册</string>
+    <string name="register_hint">没有账号？注册一个</string>
+    <string name="register_title_phone">手机号注册</string>
+    <string name="nick_name">昵称</string>
+    <string name="nick_name_example">例如：陈晨</string>
+    <string name="password">密码</string>
+    <string name="text_ack_msg">已读</string>
+    <string name="text_delivered_msg">送达</string>
+    <string name="back">返回</string>
+    <string name="save">保存</string>
+    <string name="edit">编辑</string>
+    <string name="password_rules">密码必须是8-16位的数字、字符组合(不能是纯数字)</string>
+    <string name="button_pushtotalk">按住说话</string>
+    <string name="send">发送</string>
+    <string name="sending">正在发送...</string>
+    <string name="attach_smile">表情</string>
+    <string name="attach_picture">图片</string>
+    <string name="attach_take_pic">拍照</string>
+    <string name="attach_location">位置</string>
+    <string name="attach_file">文件</string>
+    <string name="attach_voice_call">语音电话</string>
+    <string name="user_card">名片</string>
+    <string name="move_up_to_cancel">手指上滑，取消发送</string>
+    <string name="release_to_cancel">松开手指，取消发送</string>
+    <string name="send_fail">发送消息失败,</string>
+    <string name="delete_message">删除消息</string>
+    <string name="copy_message">复制消息</string>
+    <string name="delete_voice">删除语音</string>
+    <string name="delete_video">删除视频</string>
+    <string name="delete">删除</string>
+    <string name="resend">重发</string>
+    <string name="confirm_resend">确认重发该信息？</string>
+    <string name="connect_failuer_toast">请检查网络或稍候重试</string>
+    <string name="network_unavailable">网络连接不可用，请检查网络</string>
+    <string name="network_time_out">网络超时，请重试</string>
+    <string name="copy">复制</string>
+    <string name="forward">转发</string>
+    <string name="button_logout">退出登录</string>
+    <string name="button_uploadlog">上传运行日志</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="tips">提示</string>
+    <string name="clear_records">清空记录</string>
+    <string name="clear_all_records">是否清空所有聊天记录？</string>
+    <string name="location_recv">[%1$s的位置]</string>
+    <string name="location_message">位置信息</string>
+    <string name="recording_video">录制视频</string>
+    <string name="location_prefix">[我的位置]</string>
+    <string name="voice">[语音]</string>
+    <string name="picture">[图片]</string>
+    <string name="video">[视频]</string>
+    <string name="file">[文件]</string>
+    <string name="voice_call">[语音通话]</string>
+
+    <string name="button_cancel">取消</string>
+    <string name="button_save">保存</string>
+    <string name="button_search">查找</string>
+    <string name="button_add">添加</string>
+    <string name="search_header">搜</string>
+
+    <string name="network_isnot_available">网络不可用</string>
+    <string name="recoding_fail">录音失败，请重试！</string>
+    <string name="select_contacts">选择联系人</string>
+    <string name="confirm_forward_to">确定转发到：%1$s ?</string>
+    <string name="logout">退出登录</string>
+    <string name="logout_hint">退出后不会删除任何历史数据，下次登录依然可以使用本账号</string>
+    <string name="exit_group_hint">退出后，将不再接收此群聊信息</string>
+    <string name="dissolution_group_hint">退出后，此群将被解散</string>
+    <string name="exit_group">退出</string>
+    <string name="connect_conflict">同一帐号已在其他设备登录</string>
+    <string name="em_user_remove">此用户已被移除</string>
+
+    <string name="wechat_pay">支付</string>
+    <string name="my_posts">相册</string>
+    <string name="favorites">收藏</string>
+    <string name="sticker_gallery">表情</string>
+    <string name="cards_offers">卡包</string>
+    <string name="settings">设置</string>
+    <string name="go_setting">去设置</string>
+    <string name="switch_notification">接收新消息通知</string>
+    <string name="switch_sound">声音</string>
+    <string name="switch_vibrate">震动</string>
+    <string name="switch_speaker">使用扬声器播放语音</string>
+
+    <string name="personal_info">个人信息</string>
+    <string name="avatar">头像</string>
+    <string name="wx_id">微信号</string>
+    <string name="wechat_id">微信号</string>
+    <string name="qr_code">二维码名片</string>
+    <string name="scan_qr_code_and_add_friends">扫一扫上面的二维码图案，加我微信</string>
+    <string name="my_address">我的地址</string>
+    <string name="sex">性别</string>
+    <string name="region">地区</string>
+    <string name="my_sign">个性签名</string>
+
+    <string name="saving">正在保存</string>
+    <string name="wx_id_or_phone">微信号/手机号</string>
+    <string name="new_friends">新的朋友</string>
+    <string name="add_friends">添加朋友</string>
+
+    <string name="chat_info">聊天信息</string>
+    <string name="set_chat_to_top">置顶聊天</string>
+    <string name="block_chat_msg">免打扰</string>
+    <string name="clear_chat_msg">清空聊天记录</string>
+
+    <string name="sex_male">男</string>
+    <string name="sex_female">女</string>
+
+    <string name="searching_for_user">正在查找联系人...</string>
+    <string name="user_not_exists">该用户不存在</string>
+
+    <string name="connect_to_server_error">不能连接到服务器</string>
+    <string name="add_to_desktop">添加到桌面</string>
+    <string name="please_wait">请稍候...</string>
+
+    <string name="set_remark_and_tag">设置备注和标签</string>
+    <string name="complete">完成</string>
+    <string name="remark_name">备注名</string>
+    <string name="tag">标签</string>
+    <string name="sort_friend_by_tag">添加标签对联系人进行分类</string>
+    <string name="phone_num">电话号码</string>
+    <string name="add_phone_num">添加电话号码</string>
+    <string name="description">描述</string>
+    <string name="add_description">添加更多备注信息</string>
+
+    <string name="search_friend_by_phone">来自手机号搜索</string>
+    <string name="search_friend_by_wx_id">来自微信号搜索</string>
+    <string name="search_friend_by_people_nearby">来自附近的人</string>
+    <string name="search_friend_by_contact">来自手机通讯录</string>
+
+    <string name="more">更多</string>
+    <string name="more_info">更多信息</string>
+
+    <string name="add_address">新增地址</string>
+    <string name="modify_address">修改地址</string>
+    <string name="add_address_abandon_tips">是否放弃新增地址信息？</string>
+    <string name="modify_address_abandon_tips">是否放弃修改地址信息？</string>
+
+    <!--  permission  -->
+    <string name="request_permission">权限设置</string>
+    <string name="request_permission_location">在设置-应用-微信-权限中开启位置信息权限，以正常使用位置共享、搜索、摇一摇、扫街景、附近的人、微信连Wi-Fi等功能</string>
+    <string name="request_permission_camera">在设置-应用-微信-权限中开启相机权限，以正常使用拍照、小视频、扫一扫等功能</string>
+    <string name="request_permission_storage">为确保接收到的图片、视频等内容能被正常浏览，微信需要申请手机存储权限。</string>
+    <string name="request_permission_record_audio">在设置-应用-微信-权限中开启麦克风权限，以正常使用语音、小视频、摇一摇功能</string>
+    <string name="request_permission_contacts">在设置-应用-微信-权限中开启通讯录权限，以正常使用联系人查找功能</string>
+
+    <string name="moments">朋友圈</string>
+    <string name="scan">扫一扫</string>
+    <string name="shake">摇一摇</string>
+    <string name="drift_bottle">漂流瓶</string>
+    <string name="people_nearby">附近的人</string>
+    <string name="shopping">购物</string>
+    <string name="game">游戏</string>
+    <string name="mini_programs">小程序</string>
+    <string name="discover_top_stories">看一看</string>
+    <string name="discover_search">搜一搜</string>
+
+    <string name="open_people_nearby_tips">查看附件的人功能将获取你的位置信息，你的位置信息会被保留一段时间。通过列表右上角的清除功能可随时手动清除位置信息。</string>
+    <string name="searching_people_nearby">正在查找附近的人</string>
+
+    <string name="females_only">只看女生</string>
+    <string name="males_only">只看男生</string>
+    <string name="view_all">查看全部</string>
+    <string name="greetings">附近打招呼的人</string>
+    <string name="clear_location">清除位置并退出</string>
+
+    <string name="loading_location">正在确定你的位置</string>
+    <string name="clearing">正在清除...</string>
+    <string name="clear_location_error_toast">清除地理位置失败，请稍候再试。</string>
+
+    <string name="account_security">账号与安全</string>
+    <string name="notifications">新消息提醒</string>
+    <string name="do_not_disturb">勿扰模式</string>
+    <string name="chats">聊天</string>
+    <string name="privacy">隐私</string>
+    <string name="general">通用</string>
+    <string name="about">关于微信</string>
+    <string name="help_feedback">帮助与反馈</string>
+    <string name="wechat_services">插件</string>
+    <string name="switch_account">切换账号</string>
+    <string name="log_out">退出</string>
+
+    <string name="phone">手机号</string>
+    <string name="wechat_password">微信密码</string>
+    <string name="voice_print">声音锁</string>
+    <string name="emergency_contacts">应急联系人</string>
+    <string name="manage_devices">登录设备管理</string>
+    <string name="more_settings">更多安全设置</string>
+    <string name="wechat_security_center">微信安全中心</string>
+    <string name="wechat_security_center_tips">如果你遇到微信被盗，无法登陆设备等问题，可以前往安全中心</string>
+
+    <string name="manage_devices_tips">最近登录设备：你可以删除列表中的设备，删除后在该设备登录微信需要进行身份验证。</string>
+    <string name="edit_email">修改邮件地址</string>
+    <string name="edit_email_tips">如果你更改了邮件地址，你需要对邮件地址重新进行验证。</string>
+    <string name="edit_device_name">修改手机名</string>
+    <string name="edit_device_name_tips">你可以为你的设备设置一个名字</string>
+    <string name="edit_name">更改名字</string>
+    <string name="edit_wechat_id">更改微信号</string>
+    <string name="set_gender">设置性别</string>
+
+    <string name="add_contacts">添加朋友</string>
+    <string name="wechat_id_or_mobile">微信号/手机号</string>
+
+    <string name="linking">正在绑定...</string>
+    <string name="unlinking">正在解绑...</string>
+
+    <string name="not_linked">未绑定</string>
+    <string name="not_verified">未验证</string>
+    <string name="verified">已验证</string>
+    <string name="unlink">解除绑定</string>
+    <string name="unlink_tips">如果你更改了邮件地址，你需要对邮件地址重新进行验证。</string>
+    <string name="resend_verification_email">重新发送验证邮件</string>
+    <string name="resend_verification_email_tips">该邮箱还未验证，请登录你的邮箱查收邮件并验证。</string>
+
+    <string name="modify_password">设置密码</string>
+    <string name="modify_password_hint">请设置微信密码。你可以用微信绑定的账号+微信密码登录，比如使用手机号+微信密码登录微信，更快捷。</string>
+    <string name="modify_password_rule">密码必须是8-16位的数字、字符组合（不能是纯数字）</string>
+    <string name="old_password">原密码</string>
+    <string name="old_password_hint">填写原密码</string>
+    <string name="new_password">新密码</string>
+    <string name="new_password_hint">填写新密码</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="confirm_password_hint">再次填写确认</string>
+
+    <string name="old_password_empty">原密码不能为空</string>
+    <string name="new_password_empty">新密码不能为空</string>
+    <string name="confirm_password_empty">确认密码不能为空</string>
+    <string name="old_password_incorrect">原密码不正确</string>
+    <string name="confirm_password_incorrect">两次密码不一致</string>
+    <string name="modify_password_success_tips">微信密码设置成功，以后可通过手机号+微信密码登录微信</string>
+
+    <string name="mobile_contacts">查看手机通讯录</string>
+    <string name="change_mobile">更换手机号</string>
+</resources>

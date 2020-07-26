@@ -1,0 +1,116 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_map_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="37dp"
+                android:layout_height="32dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@mipmap/icon_top_back_default"
+                android:gravity="center"
+                android:onClick="back" />
+
+            <Button
+                android:id="@+id/btn_send_location"
+                android:layout_width="58dp"
+                android:layout_height="32dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/bg_save_btn"
+                android:gravity="center"
+                android:onClick="sendLocation"
+                android:text="@string/complete"
+                android:textColor="#fff"
+                android:textSize="14sp" />
+
+            <com.baidu.mapapi.map.MapView
+                android:id="@+id/mv_map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true" />
+
+            <ImageButton
+                android:id="@+id/iv_define_location"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                android:background="@mipmap/icon_define_location"
+                android:scaleType="center" />
+
+            <ImageView
+                android:id="@+id/iv_map_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingBottom="45dp"
+                android:src="@mipmap/icon_pick_location" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_near_by_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rl_map_holder"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ProgressBar
+                    android:id="@+id/pb_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="#808080"
+                    android:textSize="24sp"
+                    android:visibility="gone" />
+
+                <ListView
+                    android:id="@+id/lv_near_by"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#ffffff"
+                    android:divider="@drawable/picker_map_nearby_divider"
+                    android:dividerHeight="1px"
+                    android:listSelector="@android:color/transparent"
+                    android:scrollbars="none" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

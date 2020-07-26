@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/item_user_friends_circle"
+    android:orientation="horizontal"
+    android:padding="8dip">
+
+    <TextView
+        android:id="@+id/tv_time_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="13"
+        android:textColor="@color/black_deep"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_time_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:text="12月"
+        android:textColor="@color/black_deep"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/ll_circle_photo_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_1"
+            android:layout_width="78dip"
+            android:layout_height="78dip"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_circle_photo_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_2_1"
+            android:layout_width="39dip"
+            android:layout_height="78dip"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_2_2"
+            android:layout_width="39dip"
+            android:layout_height="78dip"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_circle_photo_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_3_1"
+            android:layout_width="39dip"
+            android:layout_height="78dip"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_3_2"
+            android:layout_width="39dip"
+            android:layout_height="39dip"
+            android:layout_toRightOf="@id/sdv_circle_photo_3_1"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_3_3"
+            android:layout_width="39dip"
+            android:layout_height="39dip"
+            android:layout_below="@id/sdv_circle_photo_3_2"
+            android:layout_toRightOf="@id/sdv_circle_photo_3_1"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_circle_photo_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_4_1"
+            android:layout_width="39dip"
+            android:layout_height="39dip"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_4_2"
+            android:layout_width="39dip"
+            android:layout_height="39dip"
+            android:layout_below="@id/sdv_circle_photo_4_1"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_4_3"
+            android:layout_width="39dip"
+            android:layout_height="39dip"
+            android:layout_toRightOf="@id/sdv_circle_photo_4_1"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_circle_photo_4_4"
+            android:layout_width="39dip"
+            android:layout_height="39dip"
+            android:layout_below="@id/sdv_circle_photo_4_3"
+            android:layout_toRightOf="@id/sdv_circle_photo_4_2"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@mipmap/default_user_avatar" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl_circle_content_with_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_circle_content_with_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:maxLines="3"
+                android:text="keyi"
+                android:textColor="@color/black_deep"
+                android:textSize="14sp"
+                android:typeface="monospace" />
+
+            <TextView
+                android:id="@+id/tv_circle_photo_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_circle_content_with_photo"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="3dp"
+                android:gravity="bottom"
+                android:text="共9张"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_circle_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/common_top_bar_grey">
+
+            <TextView
+                android:id="@+id/tv_circle_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:maxLines="3"
+                android:text="keyi"
+                android:textColor="@color/black_deep"
+                android:textSize="14sp"
+                android:typeface="monospace" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
