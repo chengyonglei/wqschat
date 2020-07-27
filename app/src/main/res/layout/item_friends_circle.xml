@@ -59,14 +59,15 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/tv_create_time"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
                 android:layout_alignParentLeft="true"
                 android:paddingTop="6dp"
                 android:text="2天前"
@@ -76,7 +77,7 @@
             <ImageButton
                 android:id="@+id/ib_comment"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:background="@mipmap/icon_comment" />
         </RelativeLayout>
@@ -94,28 +95,26 @@
                 android:id="@+id/rl_like"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingLeft="5dp"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/sdv_like_icon"
                     android:layout_width="16dp"
                     android:layout_height="13dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="8dp"
+                    android:layout_centerVertical="false"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="2dp"
                     fresco:placeholderImage="@mipmap/icon_like"
                     fresco:placeholderImageScaleType="centerCrop" />
 
-                <TextView
-                    android:id="@+id/tv_like_user"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_likelist"
+                    android:paddingLeft="25dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/sdv_like_icon"
-                    android:paddingLeft="2dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:textColor="#576b95" />
+                    android:layout_height="wrap_content"/>
             </RelativeLayout>
 
             <View
@@ -131,6 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:visibility="gone"
                 android:divider="@null"
                 android:transcriptMode="normal"
                 android:scrollbars="none" />

@@ -3,7 +3,7 @@ package com.wqs.wechat.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,7 @@ import java.util.List;
 public class FriendsCircleCommentAdapter extends BaseAdapter {
     private List<FriendsCircleComment> mFriendsCircleCommentList;
     private Context mContext;
-
+    private static final String TAG = "FriendsCircleCommentAda";
     public FriendsCircleCommentAdapter(
             List<FriendsCircleComment> friendsCircleCommentList, Context context) {
         this.mFriendsCircleCommentList = friendsCircleCommentList;
@@ -64,7 +64,9 @@ public class FriendsCircleCommentAdapter extends BaseAdapter {
 
         TextParser textParser = new TextParser();
         int color = Color.rgb(87, 107, 149);
-        if (TextUtils.isEmpty(friendsCircleComment.getCommentReplyToUserId())) {
+        Log.d(TAG, "getView: " + friendsCircleComment.getCommentReplyToUserId());
+        if (friendsCircleComment.getCommentReplyToUserId()==null) {
+            Log.d(TAG, "getView: " + friendsCircleComment.getCommentUserNickName());
             // 回复朋友圈主体
             textParser.append(friendsCircleComment.getCommentUserNickName(), 20, color, new View.OnClickListener() {
                 @Override

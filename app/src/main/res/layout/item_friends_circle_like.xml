@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <com.qmuiteam.qmui.widget.QMUIRadiusImageView
+        android:id="@+id/like_avatar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:maxHeight="50dp"
+        android:src="@mipmap/default_user_avatar"
+        android:scaleType="centerCrop" />
+</androidx.cardview.widget.CardView>

@@ -28,6 +28,7 @@ import com.lwkandroid.widget.ninegridview.NineGridBean;
 import com.lwkandroid.widget.ninegridview.NineGridView;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.QMUITopBar;
+import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 import com.wqs.wechat.R;
 import com.wqs.wechat.cons.Constant;
 import com.wqs.wechat.entity.User;
@@ -56,13 +57,15 @@ public class FriendsCircleSendActivity extends BaseActivity {
     @BindView(R.id.qtb_topbar)
     QMUITopBar topbar;
     int num = 9;
-    private VolleyUtil mVolleyUtil;
-    LoadingDialog mDialog;
+
     List<NineGridBean> resultList = new ArrayList<>();
     JsonArray images = new JsonArray();
     private final int REQUEST_CODE_PICKER = 100;
     OssService ossService = new OssService(this);
+    private VolleyUtil mVolleyUtil;
+    LoadingDialog mDialog;
     User mUser;
+    QMUIRoundButton send_btn;
     private static final String TAG = "FriendsCircleSendActivi";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,7 @@ public class FriendsCircleSendActivity extends BaseActivity {
             }
         });
         @SuppressLint("InflateParams") View root = LayoutInflater.from(this).inflate(R.layout.send_viw_right, null);
+        send_btn = root.findViewById(R.id.send_btn);
         topbar.addRightView(root, 1);
         root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +162,7 @@ public class FriendsCircleSendActivity extends BaseActivity {
                 });
                 mNineGridView.addDataList(resultList);
             }
+            send_btn.setEnabled(true);
         }
     }
     private void sendFriendCircle(String userId, String content, JsonArray images){

@@ -18,7 +18,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
-        android:src="@mipmap/image_weibo_home_1" />
+        android:src="@drawable/image_weibo_home_1" />
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
@@ -84,7 +84,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/qtb_topbar"
         android:layout_marginTop="0dp"
-        android:paddingTop="30dp"
+        android:paddingTop="20dp"
         app:navigationIcon="@drawable/jpush_ic_richpush_actionbar_back"
         android:foregroundGravity="center"
         android:layout_width="match_parent"

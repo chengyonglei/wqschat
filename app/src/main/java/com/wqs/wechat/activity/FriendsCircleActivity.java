@@ -6,6 +6,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -15,7 +17,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,13 +38,16 @@ import com.android.volley.NetworkError;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.lwkandroid.imagepicker.ImagePicker;
 import com.lwkandroid.imagepicker.data.ImageBean;
 import com.lwkandroid.imagepicker.data.ImagePickType;
+import com.qmuiteam.qmui.layout.QMUIFrameLayout;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
+import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -52,22 +57,20 @@ import com.wqs.wechat.R;
 import com.wqs.wechat.adapter.FriendsCircleAdapter;
 import com.wqs.wechat.cons.Constant;
 import com.wqs.wechat.entity.FriendsCircle;
-import com.wqs.wechat.entity.Location;
-import com.wqs.wechat.entity.MyMedia;
-import com.wqs.wechat.entity.PeopleNearby;
-import com.wqs.wechat.entity.RecyclerViewItem;
+import com.wqs.wechat.entity.FriendsCircleComment;
 import com.wqs.wechat.entity.User;
 import com.wqs.wechat.utils.PreferencesUtil;
 import com.wqs.wechat.utils.VolleyUtil;
 import com.wqs.wechat.widget.ImagePickerLoader;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.jmessage.support.google.gson.Gson;
 
 public class FriendsCircleActivity extends BaseActivity {
     private static final String TAG = "FriendsCircleActivity";
@@ -91,6 +94,12 @@ public class FriendsCircleActivity extends BaseActivity {
     LinearLayout cover;
     @BindView(R.id.fl_root)
     FrameLayout flRoot;
+    @BindView(R.id.et_text_msg)
+    EditText etTextMsg;
+    @BindView(R.id.btn_send)
+    QMUIRoundButton btnSend;
+    @BindView(R.id.qfl_tool)
+    QMUIFrameLayout qflTool;
     private int mOffset = 0;
     private int mScrollY = 0;
     int time = 0;
@@ -98,13 +107,14 @@ public class FriendsCircleActivity extends BaseActivity {
     FriendsCircleAdapter mAdapter;
     LinearLayoutManager linearLayoutManager;
     private final int REQUEST_CODE_PICKER = 100;
-    ArrayList<MyMedia> photos = new ArrayList<>();
-    private ArrayList<RecyclerViewItem> recyclerViewItemList = new ArrayList<>();
+    List<FriendsCircle> friendsCircles;
+    List<FriendsCircleComment> mFriendsCircleCommnet;
     VolleyUtil mVolleyUtil;
-    private InputMethodManager mManager;
+    String momentId;
+    String endTimestamp = String.valueOf(Calendar.getInstance().getTimeInMillis());
     //弹窗
     private PopupWindow mPopupWindow;
-    List<FriendsCircle> friendsCircles;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,41 +126,36 @@ public class FriendsCircleActivity extends BaseActivity {
         QMUIStatusBarHelper.translucent(this);
         QMUIStatusBarHelper.setStatusBarLightMode(this);
         initView();
-        loadData();
-    }
-
-    private void loadData() {
-        String url = Constant.BASE_URL + "moments?userId=" +mUser.getUserId();
-        mVolleyUtil.httpGetRequest(url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                List<FriendsCircle> friendsCircles = JSON.parseArray(s, FriendsCircle.class);
-                mAdapter = new FriendsCircleAdapter(friendsCircles, FriendsCircleActivity.this);
-                linearLayoutManager = new LinearLayoutManager(FriendsCircleActivity.this);
-                rvList.setLayoutManager(linearLayoutManager);
-                rvList.setAdapter(mAdapter);
-                topbar.setBackgroundColor(0);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                if (volleyError instanceof NetworkError) {
-                    Toast.makeText(FriendsCircleActivity.this, R.string.network_unavailable, Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (volleyError instanceof TimeoutError) {
-                    Toast.makeText(FriendsCircleActivity.this, R.string.network_time_out, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-        });
+        loadData(5, endTimestamp, mUser.getUserId());
     }
 
     private void initView() {
+        //处理EditView在键盘上面的问题
         View decorView = getWindow().getDecorView();
-        View contentView = findViewById(R.id.qfl_tool);// 此处的控件ID可以使用界面当中的指定的任意控件
-        decorView.getViewTreeObserver().addOnGlobalLayoutListener(getGlobalLayoutListener(decorView, contentView));
-        loadMyTestDate();
+        decorView.getViewTreeObserver().addOnGlobalLayoutListener(getGlobalLayoutListener(decorView, qflTool));
+        //判断输入内容来确定按钮是否能够使用
+        etTextMsg.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() > 0) {
+                    btnSend.setEnabled(true);
+                    btnSend.setBackgroundColor(getResources().getColor(R.color.wechat_btn_green));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         Glide.with(sdvAvatar).load(mUser.getUserAvatar()).into(sdvAvatar);
+        Glide.with(parallax).load(getDrawable(R.drawable.image_weibo_home_1)).into(sdvAvatar);
         tvNickname.setText(mUser.getUserNickName());
         topbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +169,7 @@ public class FriendsCircleActivity extends BaseActivity {
                 ToastUtils.showShort("Sdfasfadsfasf");
             }
         });
-        RefreshLayout refreshLayout = (RefreshLayout) findViewById(R.id.refreshLayout);
+        //下拉刷新
         refreshLayout.setOnMultiListener(new SimpleMultiListener() {
             @Override
             public void onHeaderMoving(RefreshHeader header, boolean isDragging, float percent, int offset, int headerHeight, int maxDragHeight) {
@@ -182,9 +187,10 @@ public class FriendsCircleActivity extends BaseActivity {
 
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                time = time + 1;
+                loadMoreData(1, endTimestamp, mUser.getUserId());
             }
         });
+        //检测页面滚动
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             private int lastScrollY = 0;
             private int h = SmartUtil.dp2px(300);
@@ -207,68 +213,106 @@ public class FriendsCircleActivity extends BaseActivity {
         });
 
     }
-
-    // 自定义的测试数据（假装这是网络请求并解析后的数据）
-    private void loadMyTestDate() {
-        // 先构造MyMedia
-        String imgUrl1 = "https://i0.hdslb.com/bfs/album/0b6e13b1028b9a7426990034488b4af04b54c719.png";
-        String imgUrl2 = "https://i0.hdslb.com/bfs/album/7db905515628e6c18d8a61f4369a505f1ab0dec2.jpg";
-        String imgUrl3 = "https://i0.hdslb.com/bfs/album/f26eba49f3a8c8fc394f629aba27c7e1da812698.png";
-        // 视频内容：敲架子鼓
-        String videoUrl1 = "http://jzvd.nathen.cn/c6e3dc12a1154626b3476d9bf3bd7266/6b56c5f0dc31428083757a45764763b0-5287d2089db37e62345123a1be272f8b.mp4";
-        // 视频内容：感受到鸭力
-        String videoUrl2 = "http://gslb.miaopai.com/stream/w95S1LIlrb4Hi4zGbAtC4TYx0ta4BVKr-PXjuw__.mp4?vend=miaopai&ssig=8f20ca2d86ec365f0f777b769184f8aa&time_stamp=1574944581588&mpflag=32&unique_id=1574940981591448";
-        // 视频内容：狗崽子
-        String videoUrl4 = "http://gslb.miaopai.com/stream/7-5Q7kCzeec9tu~9XvZAxNizNAL1TJC7KtJCuw__.mp4?vend=miaopai&ssig=82b42debfc2a51569bafe6ac7a993d89&time_stamp=1574944868488&mpflag=32&unique_id=1574940981591448";
-        String videoUrl3 = videoUrl4;
-
-        MyMedia myMedia1 = new MyMedia(imgUrl1, videoUrl1);
-        MyMedia myMedia2 = new MyMedia(imgUrl2);
-        MyMedia myMedia3 = new MyMedia(imgUrl3, videoUrl2);
-        MyMedia myMedia4 = new MyMedia(imgUrl1, videoUrl3);
-        MyMedia myMedia5 = new MyMedia(imgUrl3, videoUrl4);
-        // 再构造mediaList
-        // 1张图片
-        ArrayList<MyMedia> mediaList1 = new ArrayList<>();
-        mediaList1.add(myMedia2);
-        // 2张图片
-        ArrayList<MyMedia> mediaList2 = new ArrayList<>();
-        mediaList2.add(myMedia1);
-        mediaList2.add(myMedia2);
-        // 4张图片
-        ArrayList<MyMedia> mediaList4 = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            mediaList4.add(myMedia1);
-            mediaList4.add(myMedia2);
-        }
-        // 10张图片
-        ArrayList<MyMedia> mediaList10 = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            mediaList10.add(myMedia1);
-            mediaList10.add(myMedia2);
-            mediaList10.add(myMedia3);
-            mediaList10.add(myMedia4);
-            mediaList10.add(myMedia5);
-        }
-
-        Location location = new Location();
-        location.setAddress("Test Address");
-        // 最后构造EvaluationItem
-        final RecyclerViewItem recyclerViewItem1 = new RecyclerViewItem(mediaList1, "河北经贸大学自强社是在校学生处指导、学生资助管理中心主办下，于2008年4月15日注册成立的，一个以在校学生为主体的学生公益社团。历经十年的发展，在学生处、学生资助管理中心的大力支持下，在每一届自强人的团结努力下，自强社已经由成... ", "2019-11-02",
-                "10080", "自强社", location, imgUrl1);
-        final RecyclerViewItem recyclerViewItem2 = new RecyclerViewItem(mediaList2, "河北经贸大学信息技术学院成立于1996年，由原计算机系/经济信息系合并组建而成，是我校建设的第一批学院。", "2019-11-02",
-                "10080", "信息技术学院", location, imgUrl2);
-        final RecyclerViewItem recyclerViewItem4 = new RecyclerViewItem(mediaList4, "河北经贸大学信息技术学院成立于1996年，由原计算机系/经济信息系合并组建而成，是我校建设的第一批学院。", "2019-11-02",
-                "10080", "信息技术学院", location, imgUrl2);
-        final RecyclerViewItem recyclerViewItem10 = new RecyclerViewItem(mediaList10, "河北经贸大学雷雨话剧社是河北经贸大学唯一以话剧为主，兼小品，相声等多种表演艺术形式，由一批热爱表演，热爱话剧，热爱中国传统艺术与当代流行艺术结合的同学共同组成的文艺类大型社团。雷雨话剧社坚持以追求话剧“更新颖”、“更大型”、“更专业”为奋斗目标，坚持在继承传统文化和前辈的演出经验... ", "2019-11-02",
-                "10080", "雷雨话剧社", location, imgUrl3);
-        recyclerViewItemList.add(recyclerViewItem1);
-        recyclerViewItemList.add(recyclerViewItem2);
-        recyclerViewItemList.add(recyclerViewItem4);
-        recyclerViewItemList.add(recyclerViewItem10);
+    private void loadData(int limit, String timestamp, String userId) {
+        String url = Constant.BASE_URL + "moments?userId=" + userId + "&timestamp=" + timestamp + "&pageSize=" + limit;
+        mVolleyUtil.httpGetRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                friendsCircles = JSON.parseArray(s, FriendsCircle.class);
+                if (friendsCircles.size() == 0) {
+                    ToastUtils.showShort("没有数据哦");
+                } else {
+                    mAdapter = new FriendsCircleAdapter(friendsCircles, FriendsCircleActivity.this);
+                    linearLayoutManager = new LinearLayoutManager(FriendsCircleActivity.this);
+                    endTimestamp = String.valueOf(friendsCircles.get(friendsCircles.size() - 1).getTimestamp());
+                    rvList.setLayoutManager(linearLayoutManager);
+                    rvList.setAdapter(mAdapter);
+                    topbar.setBackgroundColor(0);
+                    mAdapter.setmItemOnClickListener(new FriendsCircleAdapter.ItemOnClickListener() {
+                        @Override
+                        public void itemOnClickListener(String circleId) {
+                            momentId = circleId;
+                        }
+                    });
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError instanceof NetworkError) {
+                    Toast.makeText(FriendsCircleActivity.this, R.string.network_unavailable, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (volleyError instanceof TimeoutError) {
+                    Toast.makeText(FriendsCircleActivity.this, R.string.network_time_out, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
     }
-
-    @OnClick({R.id.sdv_avatar, R.id.iv_camera, R.id.cover})
+    private void loadMoreData(int limit, String timestamp, String userId) {
+        String url = Constant.BASE_URL + "moments?userId=" + userId + "&timestamp=" + timestamp + "&pageSize=" + limit;
+        mVolleyUtil.httpGetRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                refreshLayout.finishLoadMore();
+                List<FriendsCircle> newDatas = JSON.parseArray(s, FriendsCircle.class);
+                if (friendsCircles.size() == 0) {
+                    ToastUtils.showShort("没有更多数据了");
+                } else {
+                    for (int i = 0; i < newDatas.size(); i++) {
+                        friendsCircles.add(newDatas.get(i));
+                    }
+                    endTimestamp = String.valueOf(friendsCircles.get(friendsCircles.size() - 1).getTimestamp());
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError instanceof NetworkError) {
+                    Toast.makeText(FriendsCircleActivity.this, R.string.network_unavailable, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (volleyError instanceof TimeoutError) {
+                    Toast.makeText(FriendsCircleActivity.this, R.string.network_time_out, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
+    }
+    private void addComment(String content,String userId){
+        Log.d(TAG, "addComment: " + momentId);
+        Log.d(TAG, "addComment: " + content);
+        Log.d(TAG, "addComment: " + userId);
+        String url = Constant.BASE_URL + "moments/" + momentId + "/comment";
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("content ", content);
+        paramMap.put("userId", String.valueOf(userId));
+        mVolleyUtil.httpPostRequest(url, paramMap,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                mFriendsCircleCommnet = JSON.parseArray(s, FriendsCircleComment.class);
+                if (mFriendsCircleCommnet!=null){
+                    qflTool.setVisibility(View.GONE);
+                    etTextMsg.setText(null);
+                    btnSend.setEnabled(false);
+                    KeyboardUtils.hideSoftInput(FriendsCircleActivity.this);
+                    ToastUtils.showShort("评论成功");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError instanceof NetworkError) {
+                    Toast.makeText(FriendsCircleActivity.this, R.string.network_unavailable, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (volleyError instanceof TimeoutError) {
+                    Toast.makeText(FriendsCircleActivity.this, R.string.network_time_out, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
+    }
+    @OnClick({R.id.sdv_avatar, R.id.iv_camera, R.id.cover, R.id.btn_send})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sdv_avatar:
@@ -285,9 +329,18 @@ public class FriendsCircleActivity extends BaseActivity {
                         .maxNum(1)
                         .start(FriendsCircleActivity.this, REQUEST_CODE_PICKER);
                 break;
+            case R.id.btn_send:
+                addComment(etTextMsg.getText().toString(),mUser.getUserId());
+                break;
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        endTimestamp = String.valueOf(Calendar.getInstance().getTimeInMillis());
+        loadData(5, endTimestamp, mUser.getUserId());
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -300,6 +353,11 @@ public class FriendsCircleActivity extends BaseActivity {
         }
     }
 
+    private void hidePop(View view) {
+        mPopupWindow.dismiss();
+    }
+
+    //点击相机弹出底部选择框
     private void showPop(View view) {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = layoutInflater.inflate(R.layout.popup_window_add_friends_circle, null);
@@ -344,6 +402,7 @@ public class FriendsCircleActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FriendsCircleActivity.this, FriendsCircleSendActivity.class);
                 startActivity(intent);
+                hidePop(v);
             }
         });
     }
@@ -360,6 +419,8 @@ public class FriendsCircleActivity extends BaseActivity {
         lp.alpha = bgAlpha;
         getWindow().setAttributes(lp);
     }
+
+    //处理键盘覆盖EDITTEXT
     private ViewTreeObserver.OnGlobalLayoutListener getGlobalLayoutListener(final View decorView, final View contentView) {
         return new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -368,7 +429,7 @@ public class FriendsCircleActivity extends BaseActivity {
                 decorView.getWindowVisibleDisplayFrame(r);
 
                 int height = decorView.getContext().getResources().getDisplayMetrics().heightPixels;
-                int diff = height - r.bottom+80;
+                int diff = height - r.bottom + 80;
 
                 if (diff != 0) {
                     if (contentView.getPaddingBottom() != diff) {
@@ -382,4 +443,5 @@ public class FriendsCircleActivity extends BaseActivity {
             }
         };
     }
+
 }

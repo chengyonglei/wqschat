@@ -22,9 +22,9 @@ public class FriendsCircle extends SugarRecord {
     private String momentsContent;
     private String momentsId;
     private String createTime;
-    private List<?> likeUserList;
+    private List<LikeUserList> likeUserList;
     private String userAvatar;
-    private List<?> friendsCircleCommentList;
+    private List<FriendsCircleComment> friendsCircleCommentList;
     private String userNickName;
     private String momentsPhotos;
     private String userId;
@@ -42,7 +42,7 @@ public class FriendsCircle extends SugarRecord {
         this.createTime = createTime;
     }
 
-    public void setLikeUserList(List<?> likeUserList) {
+    public void setLikeUserList(List<LikeUserList> likeUserList) {
         this.likeUserList = likeUserList;
     }
 
@@ -50,7 +50,7 @@ public class FriendsCircle extends SugarRecord {
         this.userAvatar = userAvatar;
     }
 
-    public void setFriendsCircleCommentList(List<?> friendsCircleCommentList) {
+    public void setFriendsCircleCommentList(List<FriendsCircleComment> friendsCircleCommentList) {
         this.friendsCircleCommentList = friendsCircleCommentList;
     }
 
@@ -82,7 +82,7 @@ public class FriendsCircle extends SugarRecord {
         return createTime;
     }
 
-    public List<?> getLikeUserList() {
+    public List<LikeUserList> getLikeUserList() {
         return likeUserList;
     }
 
@@ -90,7 +90,7 @@ public class FriendsCircle extends SugarRecord {
         return userAvatar;
     }
 
-    public List<?> getFriendsCircleCommentList() {
+    public List<FriendsCircleComment> getFriendsCircleCommentList() {
         return friendsCircleCommentList;
     }
 
