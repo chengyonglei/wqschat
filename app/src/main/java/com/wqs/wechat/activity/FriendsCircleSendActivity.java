@@ -8,7 +8,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.android.volley.NetworkError;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.blankj.utilcode.util.JsonUtils;
+import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.JsonArray;
 import com.lwkandroid.imagepicker.ImagePicker;
 import com.lwkandroid.imagepicker.data.ImageBean;
 import com.lwkandroid.imagepicker.data.ImagePickType;
@@ -18,16 +29,21 @@ import com.lwkandroid.widget.ninegridview.NineGridView;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.QMUITopBar;
 import com.wqs.wechat.R;
+import com.wqs.wechat.cons.Constant;
 import com.wqs.wechat.entity.User;
 import com.wqs.wechat.utils.OssService;
 import com.wqs.wechat.utils.PreferencesUtil;
 
+import com.wqs.wechat.utils.VolleyUtil;
 import com.wqs.wechat.widget.GlideImageLoader;
 import com.wqs.wechat.widget.ImagePickerLoader;
+import com.wqs.wechat.widget.LoadingDialog;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,9 +56,10 @@ public class FriendsCircleSendActivity extends BaseActivity {
     @BindView(R.id.qtb_topbar)
     QMUITopBar topbar;
     int num = 9;
-
+    private VolleyUtil mVolleyUtil;
+    LoadingDialog mDialog;
     List<NineGridBean> resultList = new ArrayList<>();
-    List<String> images = new ArrayList<>();
+    JsonArray images = new JsonArray();
     private final int REQUEST_CODE_PICKER = 100;
     OssService ossService = new OssService(this);
     User mUser;
@@ -52,8 +69,10 @@ public class FriendsCircleSendActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendcirclesend);
         ButterKnife.bind(this);
+        mVolleyUtil = VolleyUtil.getInstance(this);
         PreferencesUtil.getInstance().init(this);
         mUser = PreferencesUtil.getInstance().getUser();
+        mDialog = new LoadingDialog(FriendsCircleSendActivity.this);
         initView();
     }
 
@@ -77,6 +96,7 @@ public class FriendsCircleSendActivity extends BaseActivity {
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sendFriendCircle(mUser.getUserId(),content.getText().toString(),images);
             }
         });
         QMUIStatusBarHelper.translucent(this);
@@ -139,5 +159,35 @@ public class FriendsCircleSendActivity extends BaseActivity {
                 mNineGridView.addDataList(resultList);
             }
         }
+    }
+    private void sendFriendCircle(String userId, String content, JsonArray images){
+        String url = Constant.BASE_URL + "moments/";
+
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("userId",userId);
+        paramMap.put("content", content);
+        paramMap.put("photos",images.toString());
+        mVolleyUtil.httpPostRequest(url, paramMap, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (s.equals("ADD_MOMENTS_SUCCESS")){
+                    mDialog.dismiss();
+                    setResult(RESULT_OK);
+                }
+                finish();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                mDialog.dismiss();
+                if (volleyError instanceof NetworkError) {
+                    Toast.makeText(FriendsCircleSendActivity.this, R.string.network_unavailable, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (volleyError instanceof TimeoutError) {
+                    Toast.makeText(FriendsCircleSendActivity.this, R.string.network_time_out, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
     }
 }

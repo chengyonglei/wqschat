@@ -2,6 +2,7 @@ package com.wqs.wechat.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -20,15 +22,20 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
+import com.android.volley.NetworkError;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.lwkandroid.imagepicker.ImagePicker;
@@ -43,11 +50,15 @@ import com.scwang.smart.refresh.layout.simple.SimpleMultiListener;
 import com.scwang.smart.refresh.layout.util.SmartUtil;
 import com.wqs.wechat.R;
 import com.wqs.wechat.adapter.FriendsCircleAdapter;
+import com.wqs.wechat.cons.Constant;
+import com.wqs.wechat.entity.FriendsCircle;
 import com.wqs.wechat.entity.Location;
 import com.wqs.wechat.entity.MyMedia;
+import com.wqs.wechat.entity.PeopleNearby;
 import com.wqs.wechat.entity.RecyclerViewItem;
 import com.wqs.wechat.entity.User;
 import com.wqs.wechat.utils.PreferencesUtil;
+import com.wqs.wechat.utils.VolleyUtil;
 import com.wqs.wechat.widget.ImagePickerLoader;
 
 import java.util.ArrayList;
@@ -56,8 +67,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jmessage.support.google.gson.Gson;
 
-public class FriendsCircleActivity extends AppCompatActivity {
+public class FriendsCircleActivity extends BaseActivity {
     private static final String TAG = "FriendsCircleActivity";
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
@@ -88,24 +100,55 @@ public class FriendsCircleActivity extends AppCompatActivity {
     private final int REQUEST_CODE_PICKER = 100;
     ArrayList<MyMedia> photos = new ArrayList<>();
     private ArrayList<RecyclerViewItem> recyclerViewItemList = new ArrayList<>();
-
+    VolleyUtil mVolleyUtil;
     private InputMethodManager mManager;
     //弹窗
     private PopupWindow mPopupWindow;
-
+    List<FriendsCircle> friendsCircles;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendcircle);
         ButterKnife.bind(this);
+        mVolleyUtil = VolleyUtil.getInstance(this);
         PreferencesUtil.getInstance().init(this);
         mUser = PreferencesUtil.getInstance().getUser();
         QMUIStatusBarHelper.translucent(this);
         QMUIStatusBarHelper.setStatusBarLightMode(this);
         initView();
+        loadData();
+    }
+
+    private void loadData() {
+        String url = Constant.BASE_URL + "moments?userId=" +mUser.getUserId();
+        mVolleyUtil.httpGetRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                List<FriendsCircle> friendsCircles = JSON.parseArray(s, FriendsCircle.class);
+                mAdapter = new FriendsCircleAdapter(friendsCircles, FriendsCircleActivity.this);
+                linearLayoutManager = new LinearLayoutManager(FriendsCircleActivity.this);
+                rvList.setLayoutManager(linearLayoutManager);
+                rvList.setAdapter(mAdapter);
+                topbar.setBackgroundColor(0);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError instanceof NetworkError) {
+                    Toast.makeText(FriendsCircleActivity.this, R.string.network_unavailable, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (volleyError instanceof TimeoutError) {
+                    Toast.makeText(FriendsCircleActivity.this, R.string.network_time_out, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
     }
 
     private void initView() {
+        View decorView = getWindow().getDecorView();
+        View contentView = findViewById(R.id.qfl_tool);// 此处的控件ID可以使用界面当中的指定的任意控件
+        decorView.getViewTreeObserver().addOnGlobalLayoutListener(getGlobalLayoutListener(decorView, contentView));
         loadMyTestDate();
         Glide.with(sdvAvatar).load(mUser.getUserAvatar()).into(sdvAvatar);
         tvNickname.setText(mUser.getUserNickName());
@@ -163,11 +206,6 @@ public class FriendsCircleActivity extends AppCompatActivity {
             }
         });
 
-        mAdapter = new FriendsCircleAdapter(recyclerViewItemList, this);
-        linearLayoutManager = new LinearLayoutManager(this);
-        rvList.setLayoutManager(linearLayoutManager);
-        rvList.setAdapter(mAdapter);
-        topbar.setBackgroundColor(0);
     }
 
     // 自定义的测试数据（假装这是网络请求并解析后的数据）
@@ -321,5 +359,27 @@ public class FriendsCircleActivity extends AppCompatActivity {
         // 0.0-1.0
         lp.alpha = bgAlpha;
         getWindow().setAttributes(lp);
+    }
+    private ViewTreeObserver.OnGlobalLayoutListener getGlobalLayoutListener(final View decorView, final View contentView) {
+        return new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                decorView.getWindowVisibleDisplayFrame(r);
+
+                int height = decorView.getContext().getResources().getDisplayMetrics().heightPixels;
+                int diff = height - r.bottom+80;
+
+                if (diff != 0) {
+                    if (contentView.getPaddingBottom() != diff) {
+                        contentView.setPadding(0, 0, 0, diff);
+                    }
+                } else {
+                    if (contentView.getPaddingBottom() != 0) {
+                        contentView.setPadding(0, 0, 0, 0);
+                    }
+                }
+            }
+        };
     }
 }

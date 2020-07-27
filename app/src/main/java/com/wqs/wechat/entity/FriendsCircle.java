@@ -2,117 +2,111 @@ package com.wqs.wechat.entity;
 
 import com.orm.SugarRecord;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsCircle extends SugarRecord {
-    private String circleId;
-    private String userId;
-    private String userNickName;
-    private String userAvatar;
-    private String circleContent;
-    private ArrayList<MyMedia> circlePhotos;
+
+
+    /**
+     * momentsContent : 层经济管理吉里吉里里
+     * momentsId : cf9f8ea7807b411785445fcef8d73a55
+     * createTime : 2020-07-27 15:46:56
+     * likeUserList : []
+     * userAvatar : https://erp-wd-com.oss-cn-hangzhou.aliyuncs.com/1095fe8064ae423db093c98af6a30283.jpg
+     * friendsCircleCommentList : []
+     * userNickName : 程永磊
+     * momentsPhotos : ["https://imwechat.oss-cn-beijing.aliyuncs.com/2020/7/27/friendcircle2020072751081.jpg","https://imwechat.oss-cn-beijing.aliyuncs.com/2020/7/27/friendcircle2020072751116.jpg"]
+     * userId : c5baddef5a7642b7a8d849d10482380f
+     * timestamp : 1595836016512
+     */
+    private String momentsContent;
+    private String momentsId;
     private String createTime;
-    private Long timestamp;
-    private List<User> likeUserList;
-    private String likeUserJsonArray;
+    private List<?> likeUserList;
+    private String userAvatar;
+    private List<?> friendsCircleCommentList;
+    private String userNickName;
+    private String momentsPhotos;
+    private String userId;
+    private long timestamp;
 
-    private List<FriendsCircleComment> friendsCircleCommentList;
-    private String friendsCircleCommentJsonArray;
-
-    public String getCircleId() {
-        return circleId;
+    public void setMomentsContent(String momentsContent) {
+        this.momentsContent = momentsContent;
     }
 
-    public void setCircleId(String circleId) {
-        this.circleId = circleId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserNickName() {
-        return userNickName;
-    }
-
-    public void setUserNickName(String userNickName) {
-        this.userNickName = userNickName;
-    }
-
-    public String getUserAvatar() {
-        return userAvatar;
-    }
-
-    public void setUserAvatar(String userAvatar) {
-        this.userAvatar = userAvatar;
-    }
-
-    public String getCircleContent() {
-        return circleContent;
-    }
-
-    public void setCircleContent(String circleContent) {
-        this.circleContent = circleContent;
-    }
-
-    public ArrayList<MyMedia> getCirclePhotos() {
-        return circlePhotos;
-    }
-
-    public void setCirclePhotos(ArrayList<MyMedia> circlePhotos) {
-        this.circlePhotos = circlePhotos;
-    }
-
-    public String getCreateTime() {
-        return createTime;
+    public void setMomentsId(String momentsId) {
+        this.momentsId = momentsId;
     }
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public List<User> getLikeUserList() {
-        return likeUserList;
-    }
-
-    public void setLikeUserList(List<User> likeUserList) {
+    public void setLikeUserList(List<?> likeUserList) {
         this.likeUserList = likeUserList;
     }
 
-    public String getLikeUserJsonArray() {
-        return likeUserJsonArray;
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 
-    public void setLikeUserJsonArray(String likeUserJsonArray) {
-        this.likeUserJsonArray = likeUserJsonArray;
-    }
-
-    public List<FriendsCircleComment> getFriendsCircleCommentList() {
-        return friendsCircleCommentList;
-    }
-
-    public void setFriendsCircleCommentList(List<FriendsCircleComment> friendsCircleCommentList) {
+    public void setFriendsCircleCommentList(List<?> friendsCircleCommentList) {
         this.friendsCircleCommentList = friendsCircleCommentList;
     }
 
-    public String getFriendsCircleCommentJsonArray() {
-        return friendsCircleCommentJsonArray;
+    public void setUserNickName(String userNickName) {
+        this.userNickName = userNickName;
     }
 
-    public void setFriendsCircleCommentJsonArray(String friendsCircleCommentJsonArray) {
-        this.friendsCircleCommentJsonArray = friendsCircleCommentJsonArray;
+    public void setMomentsPhotos(String momentsPhotos) {
+        this.momentsPhotos = momentsPhotos;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getMomentsContent() {
+        return momentsContent;
+    }
+
+    public String getMomentsId() {
+        return momentsId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public List<?> getLikeUserList() {
+        return likeUserList;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public List<?> getFriendsCircleCommentList() {
+        return friendsCircleCommentList;
+    }
+
+    public String getUserNickName() {
+        return userNickName;
+    }
+
+    public String getMomentsPhotos() {
+        return momentsPhotos;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 }

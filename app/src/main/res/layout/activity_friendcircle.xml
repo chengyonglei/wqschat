@@ -97,5 +97,85 @@
             android:layout_marginRight="10dp"
             android:id="@+id/iv_camera" />
     </androidx.appcompat.widget.Toolbar>
+    <com.qmuiteam.qmui.layout.QMUIFrameLayout
+        android:id="@+id/qfl_tool"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/rl_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="4dp">
 
+            <RelativeLayout
+                android:id="@+id/rl_text_msg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_weight="1"
+                android:gravity="bottom">
+
+                <EditText
+                    android:id="@+id/et_text_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="3"
+                    android:minHeight="40dp"
+                    android:background="@drawable/chat_press_to_speak"
+                    android:paddingLeft="1dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="1dp"
+                    android:paddingBottom="3dp"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/iv_emoji_normal"
+                android:layout_width="28dip"
+                android:layout_height="28dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="7dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/icon_emoji_normal"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_emoji_checked"
+                android:layout_width="28dip"
+                android:layout_height="28dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="7dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/icon_emoji_checked"
+                android:visibility="gone" />
+
+            <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                android:id="@+id/btn_send"
+                android:layout_width="52dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="4dp"
+                app:qmui_radius="5dp"
+                android:gravity="center"
+                app:qmui_backgroundColor="@color/btn_gray_pressed_status"
+                android:background="#45c01a"
+                android:onClick="onClick"
+                android:text="@string/send"
+                android:textColor="#ffffff"
+                android:enabled="false"
+                android:textSize="14sp"
+                android:visibility="visible" />
+        </LinearLayout>
+    </com.qmuiteam.qmui.layout.QMUIFrameLayout>
 </FrameLayout>

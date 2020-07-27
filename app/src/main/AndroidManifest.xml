@@ -70,6 +70,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activity.FriendsCircleSendActivity"
+            android:windowSoftInputMode="adjustResize|adjustUnspecified|stateHidden"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"

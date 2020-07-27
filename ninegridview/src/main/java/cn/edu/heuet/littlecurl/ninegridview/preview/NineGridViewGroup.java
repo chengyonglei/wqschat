@@ -26,11 +26,11 @@ public class NineGridViewGroup extends ViewGroup {
 
     private static ImageLoader mImageLoader; //全局的图片加载器(必须设置,否者不显示图片)
 
-    private int singleMediaSize = 300;              // 单张图片时的最大大小 300 x 300,单位dp
-    private float singleImageRatio = 1.0f;          // 单张图片的宽高比(宽/高)
+    private int singleMediaSize = 200;              // 单张图片时的最大大小 300 x 300,单位dp
+    private float singleImageRatio = 0.6f;          // 单张图片的宽高比(宽/高)
     private int maxGridSize = 9;                   // 最大显示的图片数
-    private int gridSpacing = 3;                    // 宫格间距，单位dp
-    private int mode = MODE_GRID;                   // 默认使用grid模式
+    private int gridSpacing = 6;                    // 宫格间距，单位dp
+    private int mode = MODE_FILL;                   // 默认使用grid模式
 
     private int columnCount;    // 列数
     private int rowCount;       // 行数
@@ -125,6 +125,7 @@ public class NineGridViewGroup extends ViewGroup {
             int top = (gridHeight + gridSpacing) * rowNum + getPaddingTop();
             int right = left + gridWidth;
             int bottom = top + gridHeight;
+
             childrenView.layout(left, top, right, bottom);
             if (mImageLoader != null) {
                 mImageLoader.onDisplayImage(getContext(),
