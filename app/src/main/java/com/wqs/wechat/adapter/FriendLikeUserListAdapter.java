@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,9 +37,9 @@ public class FriendLikeUserListAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        QMUIRadiusImageView avatar = holder.itemView.findViewById(R.id.like_avatar);
-        Glide.with(avatar).load(list.get(position).getUserAvatar()).into(avatar);
-        avatar.setOnClickListener(new View.OnClickListener() {
+        TextView nickname = holder.itemView.findViewById(R.id.nickname);
+        nickname.setText(list.get(position).getUserNickName());
+        nickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, UserInfoActivity.class);

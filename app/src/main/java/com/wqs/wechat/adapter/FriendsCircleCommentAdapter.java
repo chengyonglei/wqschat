@@ -66,7 +66,6 @@ public class FriendsCircleCommentAdapter extends BaseAdapter {
         int color = Color.rgb(87, 107, 149);
         Log.d(TAG, "getView: " + friendsCircleComment.getCommentReplyToUserId());
         if (friendsCircleComment.getCommentReplyToUserId()==null) {
-            Log.d(TAG, "getView: " + friendsCircleComment.getCommentUserNickName());
             // 回复朋友圈主体
             textParser.append(friendsCircleComment.getCommentUserNickName(), 20, color, new View.OnClickListener() {
                 @Override

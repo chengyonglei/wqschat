@@ -61,17 +61,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="q">
-        <activity android:name=".activity.AboutActivity"
-            android:theme="@style/QMUI.Compat">
-
-        </activity>
+        <activity android:name=".activity.ShoppingActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity
+            android:name=".activity.AboutActivity"
+            android:theme="@style/QMUI.Compat" />
         <activity
             android:name=".activity.FriendsCircleActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activity.FriendsCircleSendActivity"
-            android:windowSoftInputMode="adjustResize|adjustUnspecified|stateHidden"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize|adjustUnspecified|stateHidden" />
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize" />

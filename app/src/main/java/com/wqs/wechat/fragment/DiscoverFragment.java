@@ -26,6 +26,7 @@ import com.wqs.wechat.activity.FriendsCircleActivity;
 import com.wqs.wechat.activity.MainActivity;
 import com.wqs.wechat.activity.PeopleNearbyActivity;
 import com.wqs.wechat.activity.SearchActivity;
+import com.wqs.wechat.activity.ShoppingActivity;
 import com.wqs.wechat.activity.UserInfoActivity;
 import com.wqs.wechat.activity.WebViewActivity;
 import com.wqs.wechat.entity.QrCodeContent;
@@ -52,6 +53,8 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
 
     // 附近的人
     private RelativeLayout mPeopleNearbyRl;
+    //购物
+    private RelativeLayout mRlShop;
 
     // 开启"附近的人"标记
     private ImageView mOpenPeopleNearbyIv;
@@ -72,11 +75,13 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
         mScanRl = getView().findViewById(R.id.rl_scan);
         mSearchRl = getView().findViewById(R.id.rl_search);
         mPeopleNearbyRl = getView().findViewById(R.id.rl_people_nearby);
+        mRlShop = getView().findViewById(R.id.rl_shopping);
 
         mMomentsRl.setOnClickListener(this);
         mScanRl.setOnClickListener(this);
         mSearchRl.setOnClickListener(this);
         mPeopleNearbyRl.setOnClickListener(this);
+        mRlShop.setOnClickListener(this);
     }
 
     @Override
@@ -271,6 +276,9 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 // 动态申请定位权限
                 permissions = new String[]{"android.permission.ACCESS_FINE_LOCATION"};
                 requestPerms(getActivity(), permissions, MainActivity.REQUEST_CODE_LOCATION);
+                break;
+            case R.id.rl_shopping:
+                startActivity(new Intent(getActivity(), ShoppingActivity.class));
                 break;
         }
     }

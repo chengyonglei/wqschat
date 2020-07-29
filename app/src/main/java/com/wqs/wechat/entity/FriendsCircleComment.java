@@ -3,31 +3,27 @@ package com.wqs.wechat.entity;
 public class FriendsCircleComment {
 
     /**
-     * commentCircleId : 340568faf6624dd790ea139628795faa
      * commentReplyToUserNickName : null
      * commentDeleteTime : null
      * commentUserNickName : 测试账号
-     * commentId : a6caebc4fd1e4be4bcfa710f3171beed
-     * commentCreateTime : 2020-07-27 21:10:51
+     * commentId : 54b3d9875211458fb025d1a7f29df66d
+     * commentCreateTime : 2020-07-27 21:31:08
      * commentContent : 这是第一条评论内容
+     * commentMomentsId : null
      * commentReplyToUserId : null
      * commentDeleteFlag : 0
      * commentUserId : 407abea3413d48d995d6144d0bcdb6c2
      */
-    private String commentCircleId;
     private String commentReplyToUserNickName;
     private String commentDeleteTime;
     private String commentUserNickName;
     private String commentId;
     private String commentCreateTime;
     private String commentContent;
+    private String commentMomentsId;
     private String commentReplyToUserId;
     private String commentDeleteFlag;
     private String commentUserId;
-
-    public void setCommentCircleId(String commentCircleId) {
-        this.commentCircleId = commentCircleId;
-    }
 
     public void setCommentReplyToUserNickName(String commentReplyToUserNickName) {
         this.commentReplyToUserNickName = commentReplyToUserNickName;
@@ -53,6 +49,10 @@ public class FriendsCircleComment {
         this.commentContent = commentContent;
     }
 
+    public void setCommentMomentsId(String commentMomentsId) {
+        this.commentMomentsId = commentMomentsId;
+    }
+
     public void setCommentReplyToUserId(String commentReplyToUserId) {
         this.commentReplyToUserId = commentReplyToUserId;
     }
@@ -63,10 +63,6 @@ public class FriendsCircleComment {
 
     public void setCommentUserId(String commentUserId) {
         this.commentUserId = commentUserId;
-    }
-
-    public String getCommentCircleId() {
-        return commentCircleId;
     }
 
     public String getCommentReplyToUserNickName() {
@@ -91,6 +87,10 @@ public class FriendsCircleComment {
 
     public String getCommentContent() {
         return commentContent;
+    }
+
+    public String getCommentMomentsId() {
+        return commentMomentsId;
     }
 
     public String getCommentReplyToUserId() {

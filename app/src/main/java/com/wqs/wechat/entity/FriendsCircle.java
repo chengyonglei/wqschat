@@ -6,26 +6,25 @@ import java.util.List;
 
 public class FriendsCircle extends SugarRecord {
 
-
     /**
-     * momentsContent : 层经济管理吉里吉里里
-     * momentsId : cf9f8ea7807b411785445fcef8d73a55
-     * createTime : 2020-07-27 15:46:56
-     * likeUserList : []
-     * userAvatar : https://erp-wd-com.oss-cn-hangzhou.aliyuncs.com/1095fe8064ae423db093c98af6a30283.jpg
-     * friendsCircleCommentList : []
+     * momentsContent :
+     * momentsId : ce041bd089e74abe994df0dea4a6b2c6
+     * createTime : 2020-07-27 16:48:37
+     * likeUserList : [{"userPassword":null,"userFriendDesc":null,"userPhone":null,"userAvatar":"https://erp-wd-com.oss-cn-hangzhou.aliyuncs.com/1bfd92dc8c3548589cdfb5562841f1d9.jpg","userLastestCirclePhotos":null,"userQrCode":null,"userImPassword":null,"isOwner":null,"userFriendRemark":null,"userWxId":null,"userEmail":null,"userQqId":null,"isFriend":null,"userNickName":"程永磊","friendList":null,"userSex":null,"userFriendPhone":null,"userIsEmailLinked":null,"userWxIdModifyFlag":null,"userId":"b5b149d4423c4e0eb7fc0c74acaf3fb7","userIsQqLinked":null,"isStarFriend":null,"userSign":null,"userQqPassword":null,"userHeader":null,"friendSource":null}]
+     * userAvatar : https://erp-wd-com.oss-cn-hangzhou.aliyuncs.com/1bfd92dc8c3548589cdfb5562841f1d9.jpg
      * userNickName : 程永磊
-     * momentsPhotos : ["https://imwechat.oss-cn-beijing.aliyuncs.com/2020/7/27/friendcircle2020072751081.jpg","https://imwechat.oss-cn-beijing.aliyuncs.com/2020/7/27/friendcircle2020072751116.jpg"]
-     * userId : c5baddef5a7642b7a8d849d10482380f
-     * timestamp : 1595836016512
+     * momentsCommentList : []
+     * momentsPhotos : ["https://imwechat.oss-cn-beijing.aliyuncs.com/2020/7/27/friendcircle2020072735750.jpg","https://imwechat.oss-cn-beijing.aliyuncs.com/2020/7/27/friendcircle2020072735763.jpg"]
+     * userId : b5b149d4423c4e0eb7fc0c74acaf3fb7
+     * timestamp : 1595839717873
      */
     private String momentsContent;
     private String momentsId;
     private String createTime;
     private List<LikeUserList> likeUserList;
     private String userAvatar;
-    private List<FriendsCircleComment> friendsCircleCommentList;
     private String userNickName;
+    private List<FriendsCircleComment> momentsCommentList;
     private String momentsPhotos;
     private String userId;
     private long timestamp;
@@ -50,12 +49,12 @@ public class FriendsCircle extends SugarRecord {
         this.userAvatar = userAvatar;
     }
 
-    public void setFriendsCircleCommentList(List<FriendsCircleComment> friendsCircleCommentList) {
-        this.friendsCircleCommentList = friendsCircleCommentList;
-    }
-
     public void setUserNickName(String userNickName) {
         this.userNickName = userNickName;
+    }
+
+    public void setMomentsCommentList(List<FriendsCircleComment> momentsCommentList) {
+        this.momentsCommentList = momentsCommentList;
     }
 
     public void setMomentsPhotos(String momentsPhotos) {
@@ -90,12 +89,12 @@ public class FriendsCircle extends SugarRecord {
         return userAvatar;
     }
 
-    public List<FriendsCircleComment> getFriendsCircleCommentList() {
-        return friendsCircleCommentList;
-    }
-
     public String getUserNickName() {
         return userNickName;
+    }
+
+    public List<FriendsCircleComment> getMomentsCommentList() {
+        return momentsCommentList;
     }
 
     public String getMomentsPhotos() {
@@ -109,4 +108,5 @@ public class FriendsCircle extends SugarRecord {
     public long getTimestamp() {
         return timestamp;
     }
+
 }

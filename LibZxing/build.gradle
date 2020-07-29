@@ -42,7 +42,8 @@ android {
 
     useLibrary 'org.apache.http.legacy'
 
-    lintOptions {
+    lintOptions{
+        checkReleaseBuilds false
         abortOnError false
     }
     defaultConfig {

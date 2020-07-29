@@ -7,7 +7,7 @@
     android:orientation="horizontal">
     <androidx.cardview.widget.CardView
         app:cardBackgroundColor="@color/black_80_alpha"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="3dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout

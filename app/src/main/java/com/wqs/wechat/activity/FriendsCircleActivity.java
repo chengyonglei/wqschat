@@ -128,7 +128,6 @@ public class FriendsCircleActivity extends BaseActivity {
         initView();
         loadData(5, endTimestamp, mUser.getUserId());
     }
-
     private void initView() {
         //处理EditView在键盘上面的问题
         View decorView = getWindow().getDecorView();
@@ -137,9 +136,7 @@ public class FriendsCircleActivity extends BaseActivity {
         etTextMsg.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.length() > 0) {
@@ -147,10 +144,8 @@ public class FriendsCircleActivity extends BaseActivity {
                     btnSend.setBackgroundColor(getResources().getColor(R.color.wechat_btn_green));
                 }
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
@@ -181,13 +176,13 @@ public class FriendsCircleActivity extends BaseActivity {
 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                Log.d(TAG, "onRefresh: " + "刷新");
-                refreshLayout.finishRefresh(3000);
+                endTimestamp = String.valueOf(Calendar.getInstance().getTimeInMillis());
+                loadData(10,endTimestamp,mUser.getUserId());
             }
 
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                loadMoreData(1, endTimestamp, mUser.getUserId());
+                loadMoreData(5, endTimestamp, mUser.getUserId());
             }
         });
         //检测页面滚动
@@ -218,16 +213,18 @@ public class FriendsCircleActivity extends BaseActivity {
         mVolleyUtil.httpGetRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
+                refreshLayout.finishRefresh();
                 friendsCircles = JSON.parseArray(s, FriendsCircle.class);
                 if (friendsCircles.size() == 0) {
                     ToastUtils.showShort("没有数据哦");
                 } else {
                     mAdapter = new FriendsCircleAdapter(friendsCircles, FriendsCircleActivity.this);
+                    mAdapter.setHasStableIds(true);
                     linearLayoutManager = new LinearLayoutManager(FriendsCircleActivity.this);
                     endTimestamp = String.valueOf(friendsCircles.get(friendsCircles.size() - 1).getTimestamp());
                     rvList.setLayoutManager(linearLayoutManager);
+                    rvList.getLayoutManager().setAutoMeasureEnabled(false);
                     rvList.setAdapter(mAdapter);
-                    topbar.setBackgroundColor(0);
                     mAdapter.setmItemOnClickListener(new FriendsCircleAdapter.ItemOnClickListener() {
                         @Override
                         public void itemOnClickListener(String circleId) {
@@ -255,6 +252,7 @@ public class FriendsCircleActivity extends BaseActivity {
             @Override
             public void onResponse(String s) {
                 refreshLayout.finishLoadMore();
+                refreshLayout.finishRefresh();
                 List<FriendsCircle> newDatas = JSON.parseArray(s, FriendsCircle.class);
                 if (friendsCircles.size() == 0) {
                     ToastUtils.showShort("没有更多数据了");
@@ -280,18 +278,16 @@ public class FriendsCircleActivity extends BaseActivity {
         });
     }
     private void addComment(String content,String userId){
-        Log.d(TAG, "addComment: " + momentId);
-        Log.d(TAG, "addComment: " + content);
-        Log.d(TAG, "addComment: " + userId);
+        Log.d(TAG, "addComment: " + momentId + ":"+userId+":"+content);
+        mAdapter.addComment(content,mUser.getUserNickName());
         String url = Constant.BASE_URL + "moments/" + momentId + "/comment";
         Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("content ", content);
+        paramMap.put("content", content);
         paramMap.put("userId", String.valueOf(userId));
         mVolleyUtil.httpPostRequest(url, paramMap,new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
-                mFriendsCircleCommnet = JSON.parseArray(s, FriendsCircleComment.class);
-                if (mFriendsCircleCommnet!=null){
+                if (s!=null){
                     qflTool.setVisibility(View.GONE);
                     etTextMsg.setText(null);
                     btnSend.setEnabled(false);
@@ -334,17 +330,15 @@ public class FriendsCircleActivity extends BaseActivity {
                 break;
         }
     }
-
     @Override
     protected void onResume() {
         super.onResume();
-        endTimestamp = String.valueOf(Calendar.getInstance().getTimeInMillis());
-        loadData(5, endTimestamp, mUser.getUserId());
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        endTimestamp = String.valueOf(Calendar.getInstance().getTimeInMillis());
+        loadData(10,endTimestamp,mUser.getUserId());
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             List<ImageBean> list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             for (ImageBean imageBean : list) {

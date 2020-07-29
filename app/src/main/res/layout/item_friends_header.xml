@@ -149,5 +149,37 @@
             android:textColor="#353535"
             android:textSize="16sp" />
     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="#d9d9d9" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/btn_list_item_bg"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/iv_avatar5"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:src="@mipmap/default_servicebrand_contact" />
+
+        <TextView
+            android:id="@+id/tv_zhanyou_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@id/iv_avatar5"
+            android:text="战友通讯录"
+            android:textColor="#353535"
+            android:textSize="16sp" />
+    </RelativeLayout>
 </LinearLayout>
