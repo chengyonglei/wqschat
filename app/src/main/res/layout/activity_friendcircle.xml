@@ -3,22 +3,21 @@
     android:id="@+id/fl_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
     android:background="@color/qmui_config_color_75_white"
-    android:fitsSystemWindows="false"
-    android:orientation="vertical">
+    android:fitsSystemWindows="false">
     <ImageView
         android:id="@+id/parallax"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-300dp"
+        android:layout_marginTop="-250dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
+        android:clickable="true"
         android:src="@drawable/image_weibo_home_1" />
+
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
@@ -26,9 +25,11 @@
         <com.scwang.smart.refresh.header.ClassicsHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:background="@color/transparent"/>
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
+            android:clickable="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
            <LinearLayout
@@ -38,7 +39,7 @@
                <LinearLayout
                    android:layout_width="match_parent"
                    android:layout_height="50dp"
-                   android:layout_marginTop="250dp">
+                   android:layout_marginTop="300dp">
 
                    <TextView
                        android:id="@+id/tv_nickname"
@@ -57,13 +58,14 @@
                        android:layout_width="50dp"
                        android:layout_height="50dp"
                        android:layout_marginRight="10dp"
+                       app:qmui_corner_radius="6dp"
                        android:src="@mipmap/default_user_avatar" />
 
                </LinearLayout>
                <LinearLayout
+                   android:layout_marginTop="30dp"
                    android:layout_width="match_parent"
                    android:layout_height="match_parent">
-
                    <androidx.recyclerview.widget.RecyclerView
                        android:id="@+id/rv_list"
                        android:layout_width="match_parent"
@@ -78,17 +80,25 @@
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
     <LinearLayout
         android:orientation="vertical"
-        android:id="@+id/cover"
+        android:id="@+id/v_cover"
+        android:background="@color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="250dp"/>
+        android:layout_height="300dp"/>
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/qtb_topbar"
         android:layout_marginTop="0dp"
         android:paddingTop="20dp"
-        app:navigationIcon="@drawable/jpush_ic_richpush_actionbar_back"
         android:foregroundGravity="center"
+        app:buttonGravity="top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="60dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_firendcircle_back"
+            android:layout_gravity="left"
+            android:layout_marginRight="10dp"
+            android:id="@+id/iv_back" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

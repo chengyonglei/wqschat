@@ -6,6 +6,7 @@
     <color name="common_top_title">#353535</color>
     <color name="common_top_bar_grey">#ebebeb</color>
     <color name="common_top_bar_blue">#22292c</color>
+    <color name="friendsCircleLink">#576b95</color>
     <color name="btn_login_normal">#007086</color>
     <color name="btn_login_pressed">#303744</color>
     <color name="btn_logout_normal">#d33f3f</color>

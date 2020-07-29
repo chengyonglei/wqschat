@@ -55,15 +55,20 @@ import com.scwang.smart.refresh.layout.simple.SimpleMultiListener;
 import com.scwang.smart.refresh.layout.util.SmartUtil;
 import com.wqs.wechat.R;
 import com.wqs.wechat.adapter.FriendsCircleAdapter;
+import com.wqs.wechat.adapter.FriendsCircleCommentAdapter;
 import com.wqs.wechat.cons.Constant;
+import com.wqs.wechat.dao.ContactsDao;
+import com.wqs.wechat.dao.FriendsCircleDao;
 import com.wqs.wechat.entity.FriendsCircle;
 import com.wqs.wechat.entity.FriendsCircleComment;
 import com.wqs.wechat.entity.User;
+import com.wqs.wechat.entity.UserFriendsCircle;
 import com.wqs.wechat.utils.PreferencesUtil;
 import com.wqs.wechat.utils.VolleyUtil;
 import com.wqs.wechat.widget.ImagePickerLoader;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +81,10 @@ public class FriendsCircleActivity extends BaseActivity {
     private static final String TAG = "FriendsCircleActivity";
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.v_cover)
+    LinearLayout cover;
+    @BindView(R.id.iv_back)
+    ImageView back;
     @BindView(R.id.parallax)
     ImageView parallax;
     @BindView(R.id.scrollView)
@@ -90,8 +99,6 @@ public class FriendsCircleActivity extends BaseActivity {
     TextView tvNickname;
     @BindView(R.id.sdv_avatar)
     QMUIRadiusImageView sdvAvatar;
-    @BindView(R.id.cover)
-    LinearLayout cover;
     @BindView(R.id.fl_root)
     FrameLayout flRoot;
     @BindView(R.id.et_text_msg)
@@ -108,13 +115,12 @@ public class FriendsCircleActivity extends BaseActivity {
     LinearLayoutManager linearLayoutManager;
     private final int REQUEST_CODE_PICKER = 100;
     List<FriendsCircle> friendsCircles;
-    List<FriendsCircleComment> mFriendsCircleCommnet;
     VolleyUtil mVolleyUtil;
-    String momentId;
+    List<FriendsCircleComment> comments;
+    String momentsID;
     String endTimestamp = String.valueOf(Calendar.getInstance().getTimeInMillis());
     //弹窗
     private PopupWindow mPopupWindow;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,38 +154,24 @@ public class FriendsCircleActivity extends BaseActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
-
         Glide.with(sdvAvatar).load(mUser.getUserAvatar()).into(sdvAvatar);
         Glide.with(parallax).load(getDrawable(R.drawable.image_weibo_home_1)).into(sdvAvatar);
         tvNickname.setText(mUser.getUserNickName());
-        topbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        parallax.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ToastUtils.showShort("Sdfasfadsfasf");
-            }
-        });
         //下拉刷新
         refreshLayout.setOnMultiListener(new SimpleMultiListener() {
             @Override
             public void onHeaderMoving(RefreshHeader header, boolean isDragging, float percent, int offset, int headerHeight, int maxDragHeight) {
                 super.onHeaderMoving(header, isDragging, percent, offset, headerHeight, maxDragHeight);
-                mOffset = offset / 2;
+                mOffset = offset / 1;
                 parallax.setTranslationY(mOffset - mScrollY);
+                cover.setTranslationX(mOffset-mScrollY);
                 topbar.setAlpha(1 - Math.min(percent, 1));
             }
-
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 endTimestamp = String.valueOf(Calendar.getInstance().getTimeInMillis());
                 loadData(10,endTimestamp,mUser.getUserId());
             }
-
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 loadMoreData(5, endTimestamp, mUser.getUserId());
@@ -190,13 +182,13 @@ public class FriendsCircleActivity extends BaseActivity {
             private int lastScrollY = 0;
             private int h = SmartUtil.dp2px(300);
             private int color = ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary) & 0x00ffffff;
-
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (lastScrollY < h) {
                     scrollY = Math.min(h, scrollY);
                     mScrollY = scrollY > h ? h : scrollY;
                     parallax.setTranslationY(mOffset - mScrollY);
+                    cover.setTranslationX(mOffset-mScrollY);
                     QMUIStatusBarHelper.translucent(FriendsCircleActivity.this);
                     topbar.setBackgroundColor(getColor(R.color.gray_normal));
                 }
@@ -219,7 +211,6 @@ public class FriendsCircleActivity extends BaseActivity {
                     ToastUtils.showShort("没有数据哦");
                 } else {
                     mAdapter = new FriendsCircleAdapter(friendsCircles, FriendsCircleActivity.this);
-                    mAdapter.setHasStableIds(true);
                     linearLayoutManager = new LinearLayoutManager(FriendsCircleActivity.this);
                     endTimestamp = String.valueOf(friendsCircles.get(friendsCircles.size() - 1).getTimestamp());
                     rvList.setLayoutManager(linearLayoutManager);
@@ -227,8 +218,9 @@ public class FriendsCircleActivity extends BaseActivity {
                     rvList.setAdapter(mAdapter);
                     mAdapter.setmItemOnClickListener(new FriendsCircleAdapter.ItemOnClickListener() {
                         @Override
-                        public void itemOnClickListener(String circleId) {
-                            momentId = circleId;
+                        public void itemOnClickListener(List<FriendsCircleComment> commentlist,String momentsId) {
+                            comments = commentlist;
+                            momentsID = momentsId;
                         }
                     });
                 }
@@ -278,9 +270,7 @@ public class FriendsCircleActivity extends BaseActivity {
         });
     }
     private void addComment(String content,String userId){
-        Log.d(TAG, "addComment: " + momentId + ":"+userId+":"+content);
-        mAdapter.addComment(content,mUser.getUserNickName());
-        String url = Constant.BASE_URL + "moments/" + momentId + "/comment";
+        String url = Constant.BASE_URL + "moments/" + momentsID + "/comment";
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("content", content);
         paramMap.put("userId", String.valueOf(userId));
@@ -288,11 +278,17 @@ public class FriendsCircleActivity extends BaseActivity {
             @Override
             public void onResponse(String s) {
                 if (s!=null){
+                    FriendsCircleComment comment = JSON.parseObject(s,FriendsCircleComment.class);
+                    comment.setCommentUserNickName(mUser.getUserNickName());
                     qflTool.setVisibility(View.GONE);
                     etTextMsg.setText(null);
                     btnSend.setEnabled(false);
+                    comments.add(comment);
+                    FriendsCircleCommentAdapter fccAdapter = new FriendsCircleCommentAdapter(comments,FriendsCircleActivity.this);
+                    fccAdapter.setHasStableIds(false);
+                    fccAdapter.notifyDataSetChanged();
+
                     KeyboardUtils.hideSoftInput(FriendsCircleActivity.this);
-                    ToastUtils.showShort("评论成功");
                 }
             }
         }, new Response.ErrorListener() {
@@ -308,7 +304,7 @@ public class FriendsCircleActivity extends BaseActivity {
             }
         });
     }
-    @OnClick({R.id.sdv_avatar, R.id.iv_camera, R.id.cover, R.id.btn_send})
+    @OnClick({R.id.sdv_avatar, R.id.iv_camera, R.id.btn_send,R.id.v_cover,R.id.iv_back})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sdv_avatar:
@@ -317,7 +313,7 @@ public class FriendsCircleActivity extends BaseActivity {
             case R.id.iv_camera:
                 showPop(view);
                 break;
-            case R.id.cover:
+            case R.id.v_cover:
                 new ImagePicker()
                         .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
                         .pickType(ImagePickType.MULTI)
@@ -327,6 +323,9 @@ public class FriendsCircleActivity extends BaseActivity {
                 break;
             case R.id.btn_send:
                 addComment(etTextMsg.getText().toString(),mUser.getUserId());
+                break;
+            case R.id.iv_back:
+                finish();
                 break;
         }
     }

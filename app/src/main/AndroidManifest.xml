@@ -62,7 +62,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="q">
         <activity android:name=".activity.ShoppingActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/QMUI.Compat.NoActionBar"/>
         <activity
             android:name=".activity.AboutActivity"
             android:theme="@style/QMUI.Compat" />

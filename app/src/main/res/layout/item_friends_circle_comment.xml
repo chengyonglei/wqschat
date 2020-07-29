@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_commnet"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="20dp"
+    android:gravity="center|left"
+    android:orientation="horizontal"
     android:background="#ebebeb">
     <TextView
+        android:id="@+id/tv_comment_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center"
+        android:layout_marginLeft="5dp"
+        android:textColor="@color/friendsCircleLink"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:typeface="monospace" />
+    <TextView
         android:id="@+id/tv_comment"
-        android:layout_width="match_parent"
-        android:layout_gravity="center|left"
-        android:layout_height="25dp"
-        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center"
         android:layout_marginRight="13dp"
         android:textColor="#000000"
         android:textSize="15sp"

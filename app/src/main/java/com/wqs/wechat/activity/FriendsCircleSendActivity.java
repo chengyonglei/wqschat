@@ -167,7 +167,6 @@ public class FriendsCircleSendActivity extends BaseActivity {
     }
     private void sendFriendCircle(String userId, String content, JsonArray images){
         String url = Constant.BASE_URL + "moments/";
-
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("userId",userId);
         paramMap.put("content", content);

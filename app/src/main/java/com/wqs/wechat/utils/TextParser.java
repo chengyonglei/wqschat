@@ -52,7 +52,12 @@ public class TextParser {
 
         return this;
     }
-
+    public void setNull(){
+        textList.clear();
+    }
+    public String getText(TextView textView){
+        return textView.getText().toString();
+    }
     /**
      * 写入TextView
      */

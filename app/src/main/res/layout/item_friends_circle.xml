@@ -7,12 +7,13 @@
     android:orientation="horizontal"
     android:padding="8dip">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.qmuiteam.qmui.widget.QMUIRadiusImageView
         android:id="@+id/sdv_avatar"
         android:layout_width="48dip"
         android:layout_height="48dip"
-        android:scaleType="fitXY"
-        fresco:placeholderImage="@mipmap/default_user_avatar" />
+        fresco:qmui_corner_radius="3dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/default_user_avatar"/>
 
     <View
         android:layout_width="8dip"
@@ -28,10 +29,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SomeBody"
+            android:textStyle="bold"
             android:textColor="#576b95"
             android:layout_marginBottom="10dp"
             android:lineSpacingMultiplier="1.2"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_content"
@@ -98,6 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:paddingBottom="5dp"
                 android:visibility="gone">
 
                 <com.facebook.drawee.view.SimpleDraweeView
@@ -106,7 +109,7 @@
                     android:layout_height="9dp"
                     android:layout_centerVertical="false"
                     android:foregroundGravity="center|left"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="5dp"
                     fresco:placeholderImage="@mipmap/icon_like"
                     fresco:placeholderImageScaleType="centerCrop" />
@@ -115,8 +118,7 @@
                     android:id="@+id/praise_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:paddingTop="5dp"
                     android:layout_marginLeft="20dp"
                     android:textColor="#697A9F"
                     android:textSize="16sp" />
@@ -127,14 +129,11 @@
                 android:layout_height="0.1dip"
                 android:visibility="gone"
                 android:background="@color/white" />
-            <TextView
-                android:id="@+id/tv_comment"
-                android:paddingLeft="20dp"
-                android:paddingTop="10dp"
-                android:textSize="16sp"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rl_comment"
                 android:visibility="gone"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

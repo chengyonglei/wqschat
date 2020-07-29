@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -21,11 +22,13 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.qmuiteam.qmui.layout.QMUIFrameLayout;
 import com.qmuiteam.qmui.skin.QMUISkinManager;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 import com.qmuiteam.qmui.widget.popup.QMUIPopups;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
@@ -35,6 +38,7 @@ import com.wqs.wechat.activity.UserInfoActivity;
 import com.wqs.wechat.cons.Constant;
 import com.wqs.wechat.entity.FriendsCircle;
 import com.wqs.wechat.entity.FriendsCircleComment;
+import com.wqs.wechat.entity.LikeUserList;
 import com.wqs.wechat.entity.User;
 import com.wqs.wechat.utils.PreferencesUtil;
 import com.wqs.wechat.utils.TextParser;
@@ -45,7 +49,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 import cn.edu.heuet.littlecurl.ninegridview.base.NineGridViewAdapter;
 import cn.edu.heuet.littlecurl.ninegridview.bean.NineGridItem;
@@ -60,8 +63,6 @@ public class FriendsCircleAdapter extends RecyclerView.Adapter<FriendsCircleAdap
     LoadingDialog mDialog;
     User mUser;
     private ItemOnClickListener item;
-    FriendLikeUserListAdapter likeUserListAdapter;
-    FriendsCircleCommentAdapter commentAdapter;
     private List<FriendsCircle> friendsCircles;
     private QMUIPopup mNormalPopup;
     int color = Color.rgb(87, 107, 149);
@@ -81,13 +82,14 @@ public class FriendsCircleAdapter extends RecyclerView.Adapter<FriendsCircleAdap
         View view = LayoutInflater.from(activity).inflate(R.layout.item_friends_circle, parent, false);
         return new RecyclerHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
+        //默认没有点过赞
+        Boolean isLike = false;
         FriendsCircle data = friendsCircles.get(position);
-
+        List<LikeUserList> likeUserLists = data.getLikeUserList();
+        LikeUserList user = new LikeUserList();
         TextParser textParser = new TextParser();
-        TextParser comment_text = new TextParser();
         View popuwind = LayoutInflater.from(activity).inflate(R.layout.layout_popu_view, null);
         TextView tvLike = popuwind.findViewById(R.id.tv_like);
         TextView tvComment = popuwind.findViewById(R.id.tv_comment);
@@ -98,7 +100,7 @@ public class FriendsCircleAdapter extends RecyclerView.Adapter<FriendsCircleAdap
         holder.tvNickName.setText(data.getUserNickName());
         Glide.with(holder.avatar).load(data.getUserAvatar()).into(holder.avatar);
         holder.time.setText(TimeUtil.getTimeStringAutoShort2(data.getTimestamp(), true));
-        //点击点赞或评论按钮
+        //点击操作按钮
         holder.ibComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,11 +117,43 @@ public class FriendsCircleAdapter extends RecyclerView.Adapter<FriendsCircleAdap
                         .show(view);
             }
         });
-        //点赞
+        //第一加载，判断我是否给这个朋友圈点赞过
+        for (int i = 0; i < likeUserLists.size(); i++) {
+            if (likeUserLists.get(i).getUserId().equals(mUser.getUserId())){
+                isLike = true;
+            }
+        }
+        setTvLike(tvLike,isLike);
+        //当点赞按钮被点击的时候处理
         tvLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addLike(holder,data.getMomentsId(),data,textParser);
+                Boolean isLike = false;
+                //判断是否被点赞过
+                for (int i = 0; i < likeUserLists.size(); i++) {
+                    if (likeUserLists.get(i).getUserId().equals(mUser.getUserId())){
+                        isLike = true;
+                    }
+                }
+                if (isLike){
+                    tvLike.setText("  点赞");
+                    //如果被点过，则取消点赞,并把弹窗设为 “点赞”
+                    //先找出点赞集中，我的点赞记录并移除
+                    for (int i = 0; i < likeUserLists.size(); i++) {
+                        if (likeUserLists.get(i).getUserId().equals(mUser.getUserId())) {
+                            likeUserLists.remove(i);
+                        }
+                    }
+                    //执行取消点赞
+                    unLike(data.getMomentsId(),holder,likeUserLists,textParser);
+                }else{
+                    //如果未被点过，则点赞,并把弹窗设为 “取消”
+                    tvLike.setText("  取消");
+                    user.setUserId(mUser.getUserId());
+                    user.setUserNickName(mUser.getUserNickName());
+                    likeUserLists.add(user);
+                    addLike(holder,data.getMomentsId(),data,textParser,likeUserLists);
+                }
             }
         });
         //点击评论按钮
@@ -147,44 +181,48 @@ public class FriendsCircleAdapter extends RecyclerView.Adapter<FriendsCircleAdap
         if (data.getLikeUserList().size() > 0) {
             showLike(holder,data,textParser);
         }
+        //首次加载判断是否有评论，有则执行
         if (commentlist != null && commentlist.size() > 0) {
-            showCommentList(holder,data,comment_text);
+            holder.llPingLun.setVisibility(View.VISIBLE);
+            holder.rlcomment.setVisibility(View.VISIBLE);
+            if (data.getLikeUserList().size()>0){
+                holder.rlcomment.setTop(0);
+                holder.line.setVisibility(View.VISIBLE);
+            }
+            FriendsCircleCommentAdapter mFriendsCircleCommentAdapter = new FriendsCircleCommentAdapter(data.getMomentsCommentList(),getContext());
+            LinearLayoutManager mLinerLayoutMange = new LinearLayoutManager(getContext());
+            holder.rlcomment.setLayoutManager(mLinerLayoutMange);
+            holder.rlcomment.setAdapter(mFriendsCircleCommentAdapter);
         }
     }
-
-
     @Override
     public int getItemCount() {
         return friendsCircles.size();
     }
-
     public void setmItemOnClickListener(ItemOnClickListener listener) {
         this.item = listener;
     }
-
     public interface ItemOnClickListener {
-        public void itemOnClickListener(String circleId);
+        public void itemOnClickListener(List<FriendsCircleComment> commentlist,String momentsId);
     }
-
     @Override
     public int getItemViewType(int position) {
         return super.getItemViewType(position);
     }
-
     class RecyclerHolder extends RecyclerView.ViewHolder {
         LinearLayout llPingLun;
         QMUISpanTouchFixTextView likesUsernickname ;
         TextView tvNickName;
         TextView content;
         TextView time;
-        ImageView avatar;
+        QMUIRadiusImageView avatar;
         ImageButton ibComment ;
         NineGridViewGroup photos;
         RelativeLayout rlLike;
         QMUIFrameLayout qfltool;
         TextView etTextMsg;
         QMUIRoundButton btnsend;
-        TextView commentListView;
+        RecyclerView rlcomment;
         View line;
         public RecyclerHolder(View view) {
             super(view);
@@ -200,9 +238,8 @@ public class FriendsCircleAdapter extends RecyclerView.Adapter<FriendsCircleAdap
             qfltool = activity.findViewById(R.id.qfl_tool);
             etTextMsg = activity.findViewById(R.id.et_text_msg);
             btnsend = activity.findViewById(R.id.btn_send);
-            commentListView = view.findViewById(R.id.tv_comment);
+            rlcomment = view.findViewById(R.id.rl_comment);
             line = view.findViewById(R.id.line);
-
         }
     }
     private void sendMomentLike(String userId, String momentsId) {
@@ -230,18 +267,69 @@ public class FriendsCircleAdapter extends RecyclerView.Adapter<FriendsCircleAdap
             }
         });
     }
-    private void addLike(RecyclerHolder holder,String momnetsId,FriendsCircle data,TextParser textParser){
+    private void sendUnMomentLike(String userId, String momentsId) {
+        String url = Constant.BASE_URL + "moments/" + momentsId + "/like?userId="+userId;
+        mVolleyUtil.httpDeleteRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (s.equals("UNLIKE_MOMENTS_SUCCESS")) {
+                    ToastUtils.showShort("取消成功");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                mDialog.dismiss();
+                if (volleyError instanceof NetworkError) {
+                    ToastUtils.showShort(R.string.network_unavailable);
+                    return;
+                } else if (volleyError instanceof TimeoutError) {
+                    ToastUtils.showShort(R.string.network_time_out);
+                    return;
+                }
+            }
+        });
+    }
+    private void addLike(RecyclerHolder holder, String momnetsId, FriendsCircle data, TextParser textParser, List<LikeUserList> likeUserLists){
+        //显示View
+        holder.likesUsernickname.setText(null);
+        holder.llPingLun.setVisibility(View.VISIBLE);
         holder.rlLike.setVisibility(View.VISIBLE);
-        sendMomentLike(mUser.getUserId(), momnetsId);
-        if (data.getLikeUserList().size() == 0) {
-            textParser.append(mUser.getUserNickName(), 20, color);
-        } else {
-            textParser.append(",  " + mUser.getUserNickName(), 20, color);
+        holder.likesUsernickname.setVisibility(View.VISIBLE);
+        for (int i = 0; i < likeUserLists.size(); i++) {
+            if (i==0){
+                textParser.append(likeUserLists.get(i).getUserNickName(), 20, color);
+            }else{
+                textParser.append(",  " + likeUserLists.get(i).getUserNickName(), 20, color);
+            }
+
         }
         textParser.parse(holder.likesUsernickname);
+        sendMomentLike(mUser.getUserId(), momnetsId);
+    }
+    private void unLike(String momentsId, RecyclerHolder holder, List<LikeUserList> likeUserLists, TextParser textParser) {
+        //首先把值清空
+        holder.likesUsernickname.setText(null);
+        //缓存清空
+        textParser.setNull();
+        //如果清空后，列表为空，则隐藏该布局
+        if (likeUserLists.size()==0){
+            holder.rlLike.setVisibility(View.GONE);
+        }else{
+            //如果数据不为空，则循环并赋值给该布局
+            for (int i = 0; i < likeUserLists.size(); i++) {
+                if (i==0){
+                    textParser.append(likeUserLists.get(i).getUserNickName(),20,color);
+                }else{
+                    textParser.append(","+likeUserLists.get(i).getUserNickName(),20,color);
+                }
+            }
+            textParser.parse(holder.likesUsernickname);
+        }
+        sendUnMomentLike(mUser.getUserId(),momentsId);
     }
     private void showTools(RecyclerHolder holder,FriendsCircle data) {
-        item.itemOnClickListener(data.getMomentsId());
+        item.itemOnClickListener(data.getMomentsCommentList(),data.getMomentsId());
         current_holder = holder;
         KeyboardUtils.showSoftInput(activity);
         holder.qfltool.setVisibility(View.VISIBLE);
@@ -280,89 +368,7 @@ public class FriendsCircleAdapter extends RecyclerView.Adapter<FriendsCircleAdap
         }
         textParser.parse(holder.likesUsernickname);
     }
-    private void showCommentList(RecyclerHolder holder,FriendsCircle data,TextParser comment_text){
-        holder.llPingLun.setVisibility(View.VISIBLE);
-        holder.line.setVisibility(View.VISIBLE);
-        holder.commentListView.setVisibility(View.VISIBLE);
-        for (int i = 0; i < data.getMomentsCommentList().size(); i++) {
-            FriendsCircleComment friendsCircleComment = data.getMomentsCommentList().get(i);
-            if (data.getMomentsCommentList().size()-1==i){
-                if (friendsCircleComment.getCommentReplyToUserNickName()!=null){
-                    comment_text.append(friendsCircleComment.getCommentUserNickName() + "回复"+friendsCircleComment.getCommentReplyToUserNickName(), 20, color, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(activity, UserInfoActivity.class);
-                            intent.putExtra("userId", friendsCircleComment.getCommentUserId());
-                            activity.startActivity(intent);
-                        }
-                    });
-                    comment_text.append(friendsCircleComment.getCommentContent(), 20, Color.BLACK, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ToastUtils.showShort(friendsCircleComment.getCommentContent());
-                        }
-                    });
-                }else{
-                    comment_text.append(friendsCircleComment.getCommentUserNickName() + ":  ", 20, color, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(activity, UserInfoActivity.class);
-                            intent.putExtra("userId", friendsCircleComment.getCommentUserId());
-                            activity.startActivity(intent);
-                        }
-                    });
-                    comment_text.append(friendsCircleComment.getCommentContent(), 20, Color.BLACK, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ToastUtils.showShort(friendsCircleComment.getCommentContent());
-                        }
-                    });
-                }
-
-            }else{
-                if (friendsCircleComment.getCommentReplyToUserNickName()!=null){
-                    comment_text.append(friendsCircleComment.getCommentUserNickName() + "回复"+friendsCircleComment.getCommentReplyToUserNickName(), 20, color, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(activity, UserInfoActivity.class);
-                            intent.putExtra("userId", friendsCircleComment.getCommentUserId());
-                            activity.startActivity(intent);
-                        }
-                    });
-                    comment_text.append(friendsCircleComment.getCommentContent() + "\n", 20, Color.BLACK, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ToastUtils.showShort(friendsCircleComment.getCommentContent());
-                        }
-                    });
-                }else{
-                    comment_text.append(friendsCircleComment.getCommentUserNickName() + ":  ", 20, color, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(activity, UserInfoActivity.class);
-                            intent.putExtra("userId", friendsCircleComment.getCommentUserId());
-                            activity.startActivity(intent);
-                        }
-                    });
-                    comment_text.append(friendsCircleComment.getCommentContent() + "\n", 20, Color.BLACK, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ToastUtils.showShort(friendsCircleComment.getCommentContent());
-                        }
-                    });
-                }
-
-            }
-        }
-        comment_text.parse(holder.commentListView);
-    }
-    public void addComment(String content, String userNickName) {
-        current_holder.llPingLun.setVisibility(View.VISIBLE);
-        current_holder.line.setVisibility(View.VISIBLE);
-        current_holder.commentListView.setVisibility(View.VISIBLE);
-        TextParser textParser = new TextParser();
-        textParser.append(userNickName + ":" , 20, color);
-        textParser.append(userNickName + ":" + content, 20, Color.BLACK);
-        textParser.parse(current_holder.commentListView);
+    private void setTvLike(TextView tvLike,Boolean isLike){
+        tvLike.setText(isLike?"  取消":"  点赞");
     }
 }

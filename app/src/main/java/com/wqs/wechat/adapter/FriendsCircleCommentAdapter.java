@@ -1,18 +1,18 @@
 package com.wqs.wechat.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.blankj.utilcode.util.ToastUtils;
 import com.wqs.wechat.R;
-import com.wqs.wechat.activity.UserInfoActivity;
 import com.wqs.wechat.entity.FriendsCircleComment;
 import com.wqs.wechat.utils.TextParser;
 
@@ -23,96 +23,49 @@ import java.util.List;
  *
  * @author zhou
  */
-public class FriendsCircleCommentAdapter extends BaseAdapter {
-    private List<FriendsCircleComment> mFriendsCircleCommentList;
-    private Context mContext;
-    private static final String TAG = "FriendsCircleCommentAda";
-    public FriendsCircleCommentAdapter(
-            List<FriendsCircleComment> friendsCircleCommentList, Context context) {
-        this.mFriendsCircleCommentList = friendsCircleCommentList;
-        this.mContext = context;
+public class FriendsCircleCommentAdapter extends RecyclerView.Adapter<FriendsCircleCommentAdapter.RecyclerHolder> {
+    List<FriendsCircleComment> momentsCommentList;
+    Context context;
+    int color = Color.rgb(87, 107, 149);
+    public FriendsCircleCommentAdapter(List<FriendsCircleComment> momentsCommentList, Context context) {
+        this.momentsCommentList = momentsCommentList;
+        this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_friends_circle_comment, parent, false);
+        return new RecyclerHolder(view);
     }
 
     @Override
-    public int getCount() {
-        return mFriendsCircleCommentList.size();
+    public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
+        FriendsCircleComment data = momentsCommentList.get(position);
+        holder.nickname.setText(data.getCommentUserNickName()+":");
+        holder.comment.setText(data.getCommentContent());
+        holder.llcomment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ToastUtils.showShort("点击了会话");
+            }
+        });
     }
 
-    @Override
-    public Object getItem(int position) {
-        return mFriendsCircleCommentList.get(position);
-    }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public int getItemCount() {
+        return momentsCommentList.size();
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
-        final FriendsCircleComment friendsCircleComment = mFriendsCircleCommentList.get(position);
-        final ViewHolder viewHolder;
-        if (null == convertView) {
-            convertView = LayoutInflater.from(mContext).inflate(
-                    R.layout.item_friends_circle_comment, null);
-            viewHolder = new ViewHolder();
-            viewHolder.mCommentTv = convertView.findViewById(R.id.tv_comment);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+    class RecyclerHolder extends RecyclerView.ViewHolder {
+        TextView comment,nickname;
+        LinearLayout llcomment;
+        public RecyclerHolder(@NonNull View itemView) {
+            super(itemView);
+            nickname = itemView.findViewById(R.id.tv_comment_nickname);
+            comment = itemView.findViewById(R.id.tv_comment);
+            llcomment = itemView.findViewById(R.id.ll_commnet);
         }
-
-        TextParser textParser = new TextParser();
-        int color = Color.rgb(87, 107, 149);
-        Log.d(TAG, "getView: " + friendsCircleComment.getCommentReplyToUserId());
-        if (friendsCircleComment.getCommentReplyToUserId()==null) {
-            // 回复朋友圈主体
-            textParser.append(friendsCircleComment.getCommentUserNickName(), 20, color, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mContext.startActivity(new Intent(mContext, UserInfoActivity.class).
-                            putExtra("userId", friendsCircleComment.getCommentUserId()));
-                }
-            });
-
-            textParser.append(":" + friendsCircleComment.getCommentContent(), 20, Color.BLACK, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, friendsCircleComment.getCommentContent(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            // 回复评论人
-            textParser.append(friendsCircleComment.getCommentUserNickName(), 20, color, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mContext.startActivity(new Intent(mContext, UserInfoActivity.class).
-                            putExtra("userId", friendsCircleComment.getCommentUserId()));
-                }
-            });
-            textParser.append("回复", 20, Color.BLACK);
-            textParser.append(friendsCircleComment.getCommentReplyToUserNickName(), 20, color, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mContext.startActivity(new Intent(mContext, UserInfoActivity.class).
-                            putExtra("userId", friendsCircleComment.getCommentReplyToUserId()));
-                }
-            });
-
-            textParser.append(":" + friendsCircleComment.getCommentContent(), 20, Color.BLACK, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, friendsCircleComment.getCommentContent(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        textParser.parse(viewHolder.mCommentTv);
-
-        return convertView;
-    }
-
-    class ViewHolder {
-        private TextView mCommentTv;
     }
 }
